@@ -1,0 +1,12 @@
+{
+  "id": "M1",
+  "title": "A second 'manufactured' event for an asset that already has one",
+  "refusal": "MANUFACTURE_NOT_GENESIS",
+  "laws": [6],
+  "receiptId": "rcpt_88524a38e31849d08063a6083705e8aa",
+  "refusedAt": "2026-10-11T19:39:46Z",
+  "export": "asset-export.json",
+  "receipt": "receipt-rcpt_88524a38e31849d08063a6083705e8aa.json",
+  "expectHead": "67d764054abf00d4533b755c66c4f1bea5f2a4020c409fbe37e8e118ffdc78dc",
+  "expect": "PASS"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "T1",
+  "title": "Tamper test: M1's evidence with one sealed field edited",
+  "refusal": "MANUFACTURE_NOT_GENESIS (tampered copy)",
+  "laws": [6],
+  "receiptId": "rcpt_88524a38e31849d08063a6083705e8aa",
+  "export": "asset-export.json",
+  "receipt": "receipt-rcpt_88524a38e31849d08063a6083705e8aa.json",
+  "expectHead": "67d764054abf00d4533b755c66c4f1bea5f2a4020c409fbe37e8e118ffdc78dc",
+  "expect": "FAIL"
+}

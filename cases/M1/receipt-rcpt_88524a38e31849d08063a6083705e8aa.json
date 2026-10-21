@@ -1,0 +1,37 @@
+{
+  "receiptId": "rcpt_88524a38e31849d08063a6083705e8aa",
+  "signingKeyId": "k-2026-09",
+  "tenantNamespace": {
+    "tenantId": {
+      "$oid": "6ab6f55a04ea22e0bf9c5c25"
+    },
+    "domain": "firearms"
+  },
+  "canonicalInputBundle": {
+    "assetId": "6acbe57e799dbf0fcf8def65",
+    "eventType": "Firearm_Manufactured",
+    "stateVersion": 1,
+    "stateHash": "67d764054abf00d4533b755c66c4f1bea5f2a4020c409fbe37e8e118ffdc78dc",
+    "deltaHash": "67176df00154cdffcad780de97228cba0dceac739fc431fa31c93752be4462c7",
+    "authorityHash": "29604138093960881a34aacde41b04c90172d77860e34dc0e46dac823d1d30e8",
+    "policyBundleHash": "48c5ff9312208814b40cc4282e37fd85e8b69b5339bf3a44647bb6c0b7d4b84f",
+    "natureBundleHash": "e51de85b70a287fb0156924a8e545a05889b2a8a7d318dac1e326c550f670771",
+    "contextHash": "57e9bc58c16fb5ef96196933676a1360356c7e44798619e5ced8be7c9bca4015",
+    "evidenceHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "temporalAnchor": {
+      "$date": "2026-10-11T19:39:46.923Z"
+    },
+    "hashChainFormatVersion": 4
+  },
+  "inputCommitHash": "8ac4e29575e97cc101c697e9c0f133479af25d0b0ba02e5fa84b1d2e9fbc38f3",
+  "inputCommitSignature": "yq5p8HCGjjnPj63NKTn2QX5Uuc937YS6F0Q0te7o307E4+wDyod56UG5F7pZZHThaKHk4aMrIDzOzzEti6JsAw==",
+  "epoch": 0,
+  "isFinalized": true,
+  "finalizedAt": {
+    "$date": "2026-10-11T19:39:46.963Z"
+  },
+  "evaluationOutcome": "REJECTED",
+  "failureReasonCode": "MANUFACTURE_NOT_GENESIS: Lifecycle violation -- this firearm already has a record (version 1, Firearm_Manufactured). Firearm_Manufactured can only be the first entry of an asset's chain.",
+  "validationPhaseReached": "VALIDATION_FAILURE",
+  "linkedEntryHash": null
+}

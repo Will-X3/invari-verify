@@ -1,0 +1,12 @@
+{
+  "id": "M?",
+  "title": "<one line>",
+  "refusal": "<REASON_CODE>",
+  "laws": [0],
+  "receiptId": "rcpt_...",
+  "refusedAt": "YYYY-MM-DDTHH:MM:SSZ",
+  "export": "asset-export.json",
+  "receipt": "receipt-rcpt_....json",
+  "expectHead": "<head entryHash from CHECKPOINTS.md>",
+  "expect": "PASS"
+}
