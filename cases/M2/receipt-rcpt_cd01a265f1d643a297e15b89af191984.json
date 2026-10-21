@@ -1,0 +1,37 @@
+{
+  "receiptId": "rcpt_cd01a265f1d643a297e15b89af191984",
+  "signingKeyId": "k-2026-09",
+  "tenantNamespace": {
+    "tenantId": {
+      "$oid": "6abc2c36b8a62b48e7411747"
+    },
+    "domain": "firearms"
+  },
+  "canonicalInputBundle": {
+    "assetId": "6abd4a31215382c134b8c544",
+    "eventType": "Firearm_Acquired_By_FFL",
+    "stateVersion": 10,
+    "stateHash": "3e2782129b5207b68de39dcea1c46a2f17458e694e21054ae20d3d9888cc2dbc",
+    "deltaHash": "64c5aa94935da32449c0e7bb23ed7b4c3fa7a1538c04caa19e48a8ec150b32b2",
+    "authorityHash": "da9d589dbd5d38b8f878fffd6b397015049eefd7fb30aa9fe1e822ee0bbec3b0",
+    "policyBundleHash": "29c26b4f7521238721c97a1a25547cf78a514b5a9c62da2c39e0611c3f15cc32",
+    "natureBundleHash": "e51de85b70a287fb0156924a8e545a05889b2a8a7d318dac1e326c550f670771",
+    "contextHash": "f150515f886fadf47a5b04155342049908bad0530c9ffdc628d951a2bde5b5f5",
+    "evidenceHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "temporalAnchor": {
+      "$date": "2026-10-17T21:54:47.626Z"
+    },
+    "hashChainFormatVersion": 4
+  },
+  "inputCommitHash": "2abedf09531ec162c2e441608e84cd627962b236de03f23db2698cba883a9259",
+  "inputCommitSignature": "fSq0QrUCitOvYO7q7nArRPjNVnfUiYNbYPd/+R9hMjRN7/THK+9nKSMwKxlY7JeBE1ecL0I3mYMIiRbOFceyCg==",
+  "epoch": 0,
+  "isFinalized": true,
+  "finalizedAt": {
+    "$date": "2026-10-17T21:54:47.654Z"
+  },
+  "evaluationOutcome": "REJECTED",
+  "failureReasonCode": "Stale proposal: formed against version 10, current version is 11. Resubmit against the current version.",
+  "validationPhaseReached": "VERSION_CHECK",
+  "linkedEntryHash": null
+}

@@ -1,0 +1,15 @@
+{
+  "id": "M3",
+  "title": "A sale to a customer without an executed Form 4473, refused",
+  "refusal": "regulatory.atf -- 27 CFR 478.124",
+  "laws": [
+    4,
+    7
+  ],
+  "receiptId": "rcpt_c4b57d429f4f4a7fa3c79abaeea33dc4",
+  "refusedAt": "2026-10-02T00:06:32Z",
+  "export": "asset-export.json",
+  "receipt": "receipt-rcpt_c4b57d429f4f4a7fa3c79abaeea33dc4.json",
+  "expectHead": "e1efd785431566b6b8e6c6a233288bca8e89c60dbe865fe94e7ea90edd555fdb",
+  "expect": "PASS"
+}

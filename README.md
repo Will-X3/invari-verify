@@ -19,8 +19,11 @@ node verify-all.js
 Case    Expected   Got
 ------  ---------  -------  ------------
 M1      PASS       PASS     as expected
+M2      PASS       PASS     as expected
+M3      PASS       PASS     as expected
+M6      PASS       PASS     as expected
 T1      FAIL       FAIL     as expected
-...
+
 ALL CASES AS EXPECTED
 ```
 
@@ -36,7 +39,10 @@ Compare them before you trust any PASS.
 
 | Case | What was refused | Law | Expected |
 |------|------------------|-----|----------|
-| [M1](cases/M1) | A second "manufactured" event for an asset that already has one (`MANUFACTURE_NOT_GENESIS`) | 06 History cannot be erased | PASS |
+| [M1](cases/M1) | A second "manufactured" event for an asset that already has one (`MANUFACTURE_NOT_GENESIS`) | 06 History Cannot Be Erased | PASS |
+| [M2](cases/M2) | A stale proposal: formed against v10 after v11 was committed (`STALE_VERSION`) | 02 Contemporaneous Validity | PASS |
+| [M3](cases/M3) | A sale to a customer without an executed Form 4473 (27 CFR 478.124) | 04, 07 | PASS |
+| [M6](cases/M6) | Acquiring a firearm already in the licensee's inventory (`DUPLICATE_ACQUISITION`) | 08 Composition Cannot Manufacture Authority | PASS |
 | [T1](cases/T1) | M1 with one sealed field edited -- a tamper test | 06 | **FAIL** |
 
 ## What a PASS checks
@@ -49,8 +55,15 @@ Compare them before you trust any PASS.
 3. The proposal was for this asset, formed against the stated version, by the tenant
    that held it.
 4. No entry on the chain was written from this receipt.
-5. The signed proposal names the head it was formed against, and (with
+5. The signed proposal names the head it was evaluated against, and (with
    `expectHead`) that head equals the checkpoint in [CHECKPOINTS.md](CHECKPOINTS.md).
+
+**Stale proposals (M2).** The signed bundle carries the version the proposer *claimed*
+and the head the kernel *actually evaluated against*. For a stale proposal those differ
+-- that difference is the evidence. The verifier accepts it only if the signed head is a
+**later** version on the same chain and the receipt's signed timestamp falls after that
+version and before the next one, so it really was the head at the moment of refusal.
+A signed head that is an earlier version, or a timestamp outside that window, fails.
 
 ## What it does NOT prove -- stated plainly
 

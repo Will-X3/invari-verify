@@ -35,6 +35,15 @@
  *      unchanged, and (with --expect-head) equals the published checkpoint;
  *      any later entries are listed, each with its own receipt
  *
+ * Stale proposals (STALE_VERSION): the signed bundle carries the version the
+ * proposer CLAIMED (stateVersion) and the head the kernel actually evaluated
+ * against (stateHash). For a stale proposal the two differ by design -- that
+ * difference is the evidence. It is accepted only if stateHash is the entryHash
+ * of a LATER version on this chain, and the signed temporalAnchor falls at or
+ * after that entry and before the next one (so it really was the head at the
+ * moment of refusal). The tenant, nothing-written and --expect-head checks then
+ * run against that head. Anything else is still a failure.
+ *
  * What it does NOT prove (stated in the output, not hidden):
  *   - the outcome (evaluationOutcome, failureReasonCode) is written when the
  *     receipt is finalized and is NOT covered by the signature (R-95). This
@@ -170,13 +179,53 @@ function verifyRejection(
     ? { version: base.version, entryHash: base.entryHash }
     : null;
 
+  // The entry the kernel actually evaluated against. Normally the proposal's
+  // own base; for a stale proposal, the later head named by the signed stateHash.
+  let evaluated = base;
+
   // The signed bundle names the head it was formed against (stateHash):
   // the receipt itself is a checkpoint, signed when the proposal was made.
   if (base && bundle.stateHash !== undefined) {
     if (bundle.stateHash !== base.entryHash) {
-      problems.push(
-        `receipt: signed stateHash ${bundle.stateHash} is not v${base.version}'s entryHash ${base.entryHash}`,
-      );
+      const observed = chain.find((e) => e.entryHash === bundle.stateHash) || null;
+      if (observed && observed.version > base.version) {
+        // Stale-proposal path: prove `observed` was the head when the
+        // proposal was refused, using only signed values.
+        const tOf = (v) => {
+          const d = v && typeof v === "object" ? v.$date : v;
+          const t = d ? Date.parse(d) : NaN;
+          return Number.isNaN(t) ? null : t;
+        };
+        const anchor = tOf(bundle.temporalAnchor);
+        const atHead = tOf(observed.eventTimestamp);
+        const next = chain.find((e) => e.version === observed.version + 1) || null;
+        const atNext = next ? tOf(next.eventTimestamp) : null;
+        if (anchor === null || atHead === null || (next && atNext === null)) {
+          problems.push(
+            `receipt: stale-version check needs the signed temporalAnchor and entry timestamps; one is missing`,
+          );
+        } else if (anchor < atHead || (next && anchor >= atNext)) {
+          problems.push(
+            `receipt: signed stateHash is v${observed.version}'s entryHash, but the signed temporalAnchor ${new Date(anchor).toISOString()} is not between v${observed.version} (${new Date(atHead).toISOString()})` +
+              (next ? ` and v${next.version} (${new Date(atNext).toISOString()})` : "") +
+              ` -- it was not the head when this proposal was evaluated`,
+          );
+        } else {
+          evaluated = observed;
+          facts.stale = { claimed: base.version, headAtRefusal: observed.version };
+          notes.push(
+            `STALE PROPOSAL: the signed bundle claims v${base.version} but signs v${observed.version}'s entryHash -- the head when it was evaluated ` +
+              `(signed temporalAnchor ${new Date(anchor).toISOString()} is after v${observed.version}` +
+              (next ? ` and before v${next.version}` : ", the current head") +
+              `). A proposal formed against a superseded version is what this receipt records.`,
+          );
+        }
+      } else {
+        problems.push(
+          `receipt: signed stateHash ${bundle.stateHash} is not v${base.version}'s entryHash ${base.entryHash}` +
+            (observed ? ` (it is v${observed.version}'s, an EARLIER version)` : ""),
+        );
+      }
     } else
       notes.push(
         `receipt signs the head it was proposed against: stateHash = v${base.version} entryHash`,
@@ -187,12 +236,12 @@ function verifyRejection(
     );
   }
 
-  if (base) {
+  if (evaluated) {
     const t = idOf(receipt.tenantNamespace?.tenantId);
-    const holder = idOf(base.tenantContext?.tenantId);
+    const holder = idOf(evaluated.tenantContext?.tenantId);
     if (!t || t !== holder) {
       problems.push(
-        `receipt: tenant ${t} is not the tenant on v${base.version} (${holder})`,
+        `receipt: tenant ${t} is not the tenant on v${evaluated.version} (${holder})`,
       );
     }
   }
@@ -205,11 +254,11 @@ function verifyRejection(
     );
 
   // 5. the head
-  if (base && head) {
-    const later = chain.filter((e) => e.version > base.version);
+  if (evaluated && head) {
+    const later = chain.filter((e) => e.version > evaluated.version);
     if (later.length === 0) {
       notes.push(
-        `head unchanged since the proposal: v${base.version} ${base.entryHash}`,
+        `head unchanged since the proposal: v${evaluated.version} ${evaluated.entryHash}`,
       );
     } else {
       notes.push(
@@ -218,17 +267,17 @@ function verifyRejection(
     }
   }
   if (expectHead) {
-    if (!base)
+    if (!evaluated)
       problems.push(
         "--expect-head given, but the proposal's base entry could not be found",
       );
-    else if (base.entryHash !== expectHead) {
+    else if (evaluated.entryHash !== expectHead) {
       problems.push(
-        `checkpoint: v${base.version} is ${base.entryHash}, not the published ${expectHead}`,
+        `checkpoint: v${evaluated.version} is ${evaluated.entryHash}, not the published ${expectHead}`,
       );
     } else
       notes.push(
-        `checkpoint: v${base.version} matches the published head hash`,
+        `checkpoint: v${evaluated.version} matches the published head hash`,
       );
   } else {
     notes.push(
@@ -298,7 +347,9 @@ if (require.main === module) {
   );
   if (r.ok) {
     console.log(
-      "RESULT: PASS -- signed proposal against an intact chain; nothing written from it",
+      f.stale
+        ? `RESULT: PASS -- stale proposal: claimed v${f.stale.claimed}, refused at head v${f.stale.headAtRefusal}; intact chain; nothing written from it`
+        : "RESULT: PASS -- signed proposal against an intact chain; nothing written from it",
     );
     process.exit(0);
   }

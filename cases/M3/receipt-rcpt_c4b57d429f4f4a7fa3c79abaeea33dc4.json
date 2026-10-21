@@ -1,0 +1,37 @@
+{
+  "receiptId": "rcpt_c4b57d429f4f4a7fa3c79abaeea33dc4",
+  "signingKeyId": "k-2026-09",
+  "tenantNamespace": {
+    "tenantId": {
+      "$oid": "6abc2c36b8a62b48e7411747"
+    },
+    "domain": "firearms"
+  },
+  "canonicalInputBundle": {
+    "assetId": "6abef588901bd31bbfe862d3",
+    "eventType": "Firearm_Disposed_To_Customer",
+    "stateVersion": 1,
+    "stateHash": "e1efd785431566b6b8e6c6a233288bca8e89c60dbe865fe94e7ea90edd555fdb",
+    "deltaHash": "8a6f2ba04a2ba0eec24d1e93afa8fc748b69a81296897b97daefd2a1f8f73a2b",
+    "authorityHash": "9a38db567182d9e34a7ad6bb561a885bd59e2f91e9bb6777baeec7696300d7f8",
+    "policyBundleHash": "ca9e8003b2fd10ab97ec0a1482fc8287cb418f9b79e070a7803f6afce7b5c36f",
+    "natureBundleHash": null,
+    "contextHash": "218e6f93eb826f2f9e1fd4701f0ed064ffea56b2de97a0bfdf98b25d3d302887",
+    "evidenceHash": "d7166fcf4214891f4b5cb0ffa967f649c0592b568775b1eca23f84835bc14492",
+    "temporalAnchor": {
+      "$date": "2026-10-02T00:06:32.581Z"
+    },
+    "hashChainFormatVersion": 4
+  },
+  "inputCommitHash": "5af380c8d3d7104d4d0fc48c85112e677e2f96754ff3ae169eb3264a3c028ee4",
+  "inputCommitSignature": "f/MYgnLEojyHEtPXhzidfeGn4Zt1hDdJRjlpEauhRxQu3RaqnGo2IW3E87RLzuPUslcZ8/8/EEVj+2g5+xW+AA==",
+  "epoch": 0,
+  "isFinalized": true,
+  "finalizedAt": {
+    "$date": "2026-10-02T00:06:32.771Z"
+  },
+  "evaluationOutcome": "REJECTED",
+  "failureReasonCode": "ATF violation (27 CFR § 478.124): Firearm disposition requires executed Form 4473",
+  "validationPhaseReached": "VALIDATION_FAILURE",
+  "linkedEntryHash": null
+}

@@ -1,0 +1,14 @@
+{
+  "id": "M2",
+  "title": "A stale proposal, refused: formed against v10 after v11 was committed",
+  "refusal": "STALE_VERSION",
+  "laws": [
+    2
+  ],
+  "receiptId": "rcpt_cd01a265f1d643a297e15b89af191984",
+  "refusedAt": "2026-10-17T21:54:47Z",
+  "export": "asset-export.json",
+  "receipt": "receipt-rcpt_cd01a265f1d643a297e15b89af191984.json",
+  "expectHead": "3e2782129b5207b68de39dcea1c46a2f17458e694e21054ae20d3d9888cc2dbc",
+  "expect": "PASS"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "M6",
+  "title": "Acquiring a firearm already in the licensee's inventory, refused",
+  "refusal": "DUPLICATE_ACQUISITION",
+  "laws": [
+    8
+  ],
+  "receiptId": "rcpt_003e54424b034e9b95ba1a5d6b462442",
+  "refusedAt": "2026-10-17T21:53:59Z",
+  "export": "asset-export.json",
+  "receipt": "receipt-rcpt_003e54424b034e9b95ba1a5d6b462442.json",
+  "expectHead": "3e2782129b5207b68de39dcea1c46a2f17458e694e21054ae20d3d9888cc2dbc",
+  "expect": "PASS"
+}
