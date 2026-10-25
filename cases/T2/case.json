@@ -1,0 +1,12 @@
+{
+  "id": "T2",
+  "kind": "record",
+  "title": "Tamper test: R1's record with the signed message edited",
+  "refusal": "TRANSFER_RECEIVE_REFUSED (tampered copy)",
+  "laws": [
+    6
+  ],
+  "recordId": "6ade6817480788a722888a45",
+  "record": "refusal-record.json",
+  "expect": "FAIL"
+}

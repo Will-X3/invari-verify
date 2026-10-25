@@ -22,7 +22,9 @@ M1      PASS       PASS     as expected
 M2      PASS       PASS     as expected
 M3      PASS       PASS     as expected
 M6      PASS       PASS     as expected
+R1      PASS       PASS     as expected
 T1      FAIL       FAIL     as expected
+T2      FAIL       FAIL     as expected
 
 ALL CASES AS EXPECTED
 ```
@@ -43,7 +45,14 @@ Compare them before you trust any PASS.
 | [M2](cases/M2) | A stale proposal: formed against v10 after v11 was committed (`STALE_VERSION`) | 02 Contemporaneous Validity | PASS |
 | [M3](cases/M3) | A sale to a customer without an executed Form 4473 (27 CFR 478.124) | 04, 07 | PASS |
 | [M6](cases/M6) | Acquiring a firearm already in the licensee's inventory (`DUPLICATE_ACQUISITION`) | 08 Composition Cannot Manufacture Authority | PASS |
+| [R1](cases/R1) | Receiving a transfer already completed -- a workflow refusal, recorded and signed (`TRANSFER_RECEIVE_REFUSED`) | 06 | PASS |
 | [T1](cases/T1) | M1 with one sealed field edited -- a tamper test | 06 | **FAIL** |
+| [T2](cases/T2) | R1 with its signed message edited -- a tamper test | 06 | **FAIL** |
+
+M cases are refused by the kernel: the evidence is a signed proposal, a receipt and
+the chain. R cases are refused by the workflow before anything reaches the kernel, so
+there is no receipt: the evidence is the sealed refusal record, checked by
+`kernel/tools/verifyRefusalRecord.js`.
 
 ## What a PASS checks
 
@@ -91,4 +100,5 @@ CHECKPOINTS.md     published chain heads, one per case, with dates
 verify-all.js      runs every case against its expected result
 kernel/            the verifier source -- canonicalize.js, seal.js, tools/
 cases/<ID>/        README.md, case.json, asset-export.json, receipt-<id>.json
+                   (R cases: README.md, case.json, refusal-record.json)
 ```

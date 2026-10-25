@@ -17,6 +17,12 @@
  *     "expect": "PASS"                                            // or "FAIL" for a tamper test
  *   }
  *
+ * A refusal that never reached the kernel has no receipt; its case is
+ * "kind": "record" and names the signed refusal record instead:
+ *   { "id": "R1", "kind": "record", "record": "refusal-record.json",
+ *     "previousActor": "previous-actor-record.json",            // optional
+ *     "expect": "PASS" }
+ *
  * Uses the root public-keys.json for every case -- never a key shipped inside a
  * case folder. Compare that file with the key published on invari.systems.
  *
@@ -31,6 +37,7 @@ const { spawnSync } = require("child_process");
 const root = __dirname;
 const casesDir = path.join(root, "cases");
 const verifier = path.join(root, "kernel", "tools", "verifyRejection.js");
+const recordVerifier = path.join(root, "kernel", "tools", "verifyRefusalRecord.js");
 const keys = path.join(root, "public-keys.json");
 const only = process.argv[2];
 
@@ -56,8 +63,14 @@ for (const name of cases) {
     continue;
   }
   const cfg = JSON.parse(fs.readFileSync(cfgPath, "utf8"));
-  const args = [verifier, path.join(dir, cfg.export), path.join(dir, cfg.receipt), keys];
-  if (cfg.expectHead) args.push("--expect-head", cfg.expectHead);
+  let args;
+  if (cfg.kind === "record") {
+    args = [recordVerifier, path.join(dir, cfg.record), keys];
+    if (cfg.previousActor) args.push("--previous-actor", path.join(dir, cfg.previousActor));
+  } else {
+    args = [verifier, path.join(dir, cfg.export), path.join(dir, cfg.receipt), keys];
+    if (cfg.expectHead) args.push("--expect-head", cfg.expectHead);
+  }
 
   const run = spawnSync(process.execPath, args, { encoding: "utf8" });
   const out = `${run.stdout || ""}${run.stderr || ""}`;

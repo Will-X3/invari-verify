@@ -1,0 +1,13 @@
+{
+  "id": "R1",
+  "kind": "record",
+  "title": "Receiving a transfer that was already completed",
+  "refusal": "TRANSFER_RECEIVE_REFUSED",
+  "laws": [
+    6
+  ],
+  "recordId": "6ade6817480788a722888a45",
+  "refusedAt": "2026-10-25T20:35:35Z",
+  "record": "refusal-record.json",
+  "expect": "PASS"
+}

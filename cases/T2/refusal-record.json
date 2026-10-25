@@ -1,0 +1,51 @@
+{
+  "_id": {
+    "$oid": "6ade6817480788a722888a45"
+  },
+  "assetId": "entity::6ade443bb5d791882f225075",
+  "chainScopeFallback": "TENANT_ENTITY_CHAIN",
+  "coreBookInstanceId": {
+    "$oid": "6ade443bb5d791882f225077"
+  },
+  "domain": "firearms",
+  "tenantContext": {
+    "type": "FFL",
+    "tenantId": {
+      "$oid": "6ade443bb5d791882f225075"
+    }
+  },
+  "attemptedEventType": "TRANSFER_RECEIVE",
+  "attemptedMetadata": {
+    "transferId": "6ade49d8b5d791882f226505"
+  },
+  "actor": {
+    "actorId": {
+      "$oid": "6ade444db5d791882f2250b6"
+    },
+    "actorInvariId": "INV-209C5967",
+    "actorType": "Human",
+    "actionRole": "Entity_Employee",
+    "employmentRole": "Owner"
+  },
+  "enforcementPhase": "DOMAIN_RULE",
+  "nNodeRef": null,
+  "natureBundleHash": null,
+  "policyBundleHash": null,
+  "outcome": "REJECTED",
+  "severity": "MEDIUM",
+  "reasonCode": "TRANSFER_RECEIVE_REFUSED",
+  "message": "Transfer must be shipped first. Current: accepted",
+  "partialPolicyTrace": [],
+  "assetSequenceNumber": 1,
+  "previousAssetEntryHash": null,
+  "actorSequenceNumber": 2,
+  "previousActorEntryHash": "f4bcdf64e5bd342fe2c18f9440f4d09aab899197c73dcfdc05d38047959b1c83",
+  "sealFormatVersion": 2,
+  "signingKeyId": "k-2026-09",
+  "createdAt": {
+    "$date": "2026-10-25T20:35:35.795Z"
+  },
+  "isImmutable": true,
+  "entryHash": "4e93bdc6dc1a9915daaa0d21db8979279a48338de5d4b747f23f05e8a69452d1",
+  "entrySignature": "82sO97yS52MPIn/0TQRncPhGA94C7hhbyg29dRYO634MN5aiF8HNly3y+hDVZerNHWTC6Wu8+K/OJ+h/Kc47AQ=="
+}
