@@ -1,0 +1,9 @@
+{
+  "id": "T3",
+  "kind": "export",
+  "title": "Tamper test: A1 with one affirmation's prompt rewritten and every root recomputed",
+  "laws": [],
+  "export": "entity-export.json",
+  "requireSigned": { "affirmationArtifacts": 3 },
+  "expect": "FAIL"
+}

@@ -2,8 +2,10 @@
 
 Evidence you can check without trusting Invari.
 
-Each folder in `cases/` is a real proposal that **Invari.kOS refused**, exported with
-its signed chain and its signed receipt, plus the verifier source. You need only
+Each folder in `cases/` is real evidence from Invari.kOS: a proposal it **refused**,
+exported with its signed chain and its signed receipt -- or, in A cases, a regulated
+act it **accepted** together with the signed human judgments behind it -- plus the
+verifier source. You need only
 Node.js (any current LTS) and Invari's public key. No npm install, no network, no
 Invari server.
 
@@ -18,6 +20,7 @@ node verify-all.js
 ```
 Case    Expected   Got
 ------  ---------  -------  ------------
+A1      PASS       PASS     as expected
 M1      PASS       PASS     as expected
 M2      PASS       PASS     as expected
 M3      PASS       PASS     as expected
@@ -25,6 +28,7 @@ M6      PASS       PASS     as expected
 R1      PASS       PASS     as expected
 T1      FAIL       FAIL     as expected
 T2      FAIL       FAIL     as expected
+T3      FAIL       FAIL     as expected
 
 ALL CASES AS EXPECTED
 ```
@@ -39,8 +43,9 @@ Compare them before you trust any PASS.
 
 ## Cases
 
-| Case | What was refused | Law | Expected |
-|------|------------------|-----|----------|
+| Case | What it shows | Law | Expected |
+|------|---------------|-----|----------|
+| [A1](cases/A1) | A licensee's onboarding, and the three signed affirmations (license verified, legitimacy judged, onboarding authorized) the ledger entry cites | -- | PASS |
 | [M1](cases/M1) | A second "manufactured" event for an asset that already has one (`MANUFACTURE_NOT_GENESIS`) | 06 History Cannot Be Erased | PASS |
 | [M2](cases/M2) | A stale proposal: formed against v10 after v11 was committed (`STALE_VERSION`) | 02 Contemporaneous Validity | PASS |
 | [M3](cases/M3) | A sale to a customer without an executed Form 4473 (27 CFR 478.124) | 04, 07 | PASS |
@@ -48,11 +53,14 @@ Compare them before you trust any PASS.
 | [R1](cases/R1) | Receiving a transfer already completed -- a workflow refusal, recorded and signed (`TRANSFER_RECEIVE_REFUSED`) | 06 | PASS |
 | [T1](cases/T1) | M1 with one sealed field edited -- a tamper test | 06 | **FAIL** |
 | [T2](cases/T2) | R1 with its signed message edited -- a tamper test | 06 | **FAIL** |
+| [T3](cases/T3) | A1 with one affirmation's prompt rewritten and every root recomputed -- a tamper test | -- | **FAIL** |
 
 M cases are refused by the kernel: the evidence is a signed proposal, a receipt and
 the chain. R cases are refused by the workflow before anything reaches the kernel, so
 there is no receipt: the evidence is the sealed refusal record, checked by
-`kernel/tools/verifyRefusalRecord.js`.
+`kernel/tools/verifyRefusalRecord.js`. A cases are accepted acts: the evidence is a
+whole chain export, checked by `kernel/tools/verifyExport.js` -- every ledger entry,
+every signed affirmation, and that each affirmation the entry cites is an AFFIRM.
 
 ## What a PASS checks
 

@@ -17,6 +17,11 @@
  *     "expect": "PASS"                                            // or "FAIL" for a tamper test
  *   }
  *
+ * A whole export -- e.g. an onboarding and the signed affirmations behind
+ * it -- is "kind": "export" and runs kernel/tools/verifyExport.js:
+ *   { "id": "A1", "kind": "export", "export": "entity-export.json",
+ *     "requireSigned": { "affirmationArtifacts": 3 }, "expect": "PASS" }
+ *
  * A refusal that never reached the kernel has no receipt; its case is
  * "kind": "record" and names the signed refusal record instead:
  *   { "id": "R1", "kind": "record", "record": "refusal-record.json",
@@ -38,6 +43,7 @@ const root = __dirname;
 const casesDir = path.join(root, "cases");
 const verifier = path.join(root, "kernel", "tools", "verifyRejection.js");
 const recordVerifier = path.join(root, "kernel", "tools", "verifyRefusalRecord.js");
+const exportVerifier = path.join(root, "kernel", "tools", "verifyExport.js");
 const keys = path.join(root, "public-keys.json");
 const only = process.argv[2];
 
@@ -64,7 +70,12 @@ for (const name of cases) {
   }
   const cfg = JSON.parse(fs.readFileSync(cfgPath, "utf8"));
   let args;
-  if (cfg.kind === "record") {
+  if (cfg.kind === "export") {
+    args = [exportVerifier, path.join(dir, cfg.export), keys];
+    for (const [section, n] of Object.entries(cfg.requireSigned || {})) {
+      args.push("--require-signed", `${section}=${n}`);
+    }
+  } else if (cfg.kind === "record") {
     args = [recordVerifier, path.join(dir, cfg.record), keys];
     if (cfg.previousActor) args.push("--previous-actor", path.join(dir, cfg.previousActor));
   } else {

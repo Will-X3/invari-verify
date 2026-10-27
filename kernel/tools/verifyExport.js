@@ -11,7 +11,11 @@
  * and kernel/seal.js (both dependency-free), and Invari's PUBLIC
  * signing keys.
  *
- *   node verifyExport.js <export.json> [public-keys.json]
+ *   node verifyExport.js <export.json> [public-keys.json] [--require-signed <section>=<n> ...]
+ *
+ * --require-signed affirmationArtifacts=3: fail unless at least 3 records
+ * in that section verified by signature (not legacy, not untagged) -- so a
+ * case that is about signed records can't pass on an older export.
  *
  * public-keys.json: {"<keyId>": "<PEM>"} from Invari's published keys,
  * NOT from the export itself. If omitted, the keys embedded in the
@@ -361,7 +365,18 @@ function verifyExport(artifact, publicKeys) {
 module.exports = { verifyExport };
 
 if (require.main === module) {
-  const [exportPath, keysPath] = process.argv.slice(2);
+  const args = process.argv.slice(2);
+  const requireSigned = [];
+  for (let i = args.indexOf("--require-signed"); i >= 0; i = args.indexOf("--require-signed")) {
+    const [section, n] = String(args[i + 1] || "").split("=");
+    if (!section || !Number.isInteger(Number(n))) {
+      console.error("--require-signed takes <section>=<count>");
+      process.exit(2);
+    }
+    requireSigned.push({ section, n: Number(n) });
+    args.splice(i, 2);
+  }
+  const [exportPath, keysPath] = args;
   if (!exportPath) {
     console.error(
       "Usage: node verifyExport.js <export.json> [public-keys.json]",
@@ -384,6 +399,13 @@ if (require.main === module) {
   }
 
   const result = verifyExport(artifact, publicKeys);
+  for (const { section, n } of requireSigned) {
+    const got = result.signedRecords.find((x) => x.section === section)?.sealed ?? 0;
+    if (got < n) {
+      result.ok = false;
+      result.problems.push(`${section}: ${got} record(s) verified by signature, at least ${n} required`);
+    }
+  }
   console.log(`Entries checked: ${result.entryCount}`);
   for (const c of result.chains) {
     console.log(

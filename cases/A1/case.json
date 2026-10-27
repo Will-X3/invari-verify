@@ -1,0 +1,11 @@
+{
+  "id": "A1",
+  "kind": "export",
+  "title": "An onboarding and the three signed affirmations behind it",
+  "laws": [],
+  "subject": "entity 6ae112b4465f89eca27ae89f (Disturbance Tactical, FFL)",
+  "exportedAt": "2026-10-27T21:20:27Z",
+  "export": "entity-export.json",
+  "requireSigned": { "affirmationArtifacts": 3 },
+  "expect": "PASS"
+}
