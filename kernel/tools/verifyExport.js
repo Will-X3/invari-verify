@@ -36,6 +36,14 @@
  *      JSON.stringify(records | assets)
  *   5. masterRootHash: matches one of the formulas the export
  *      controllers use (see masterCandidates)
+ *   6. signed records (R-153, export format 3.2.0): every record in an
+ *      affirmationArtifacts or enforcementLog section. Sealed ones
+ *      (sealFormatVersion 2) by their own hash and Ed25519 signature;
+ *      older ones by their legacy unsigned formula, reported as legacy.
+ *      A 3.1.0 export wrote these records untagged, so a sealed record
+ *      there can't be recomputed -- reported as a note, not a failure.
+ *   7. affirmations cited by a ledger entry (evidenceRefs) that are in
+ *      this export must be AFFIRM records that verify
  *
  * Exit code 0 = all checks pass, 1 = a check failed, 2 = usage/input error.
  */
@@ -43,7 +51,72 @@
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
-const { verifyLedgerEntrySeal } = require(path.join(__dirname, "..", "seal"));
+const { verifyLedgerEntrySeal, computeHash, verifySignature, importPublicKey } = require(
+  path.join(__dirname, "..", "seal"),
+);
+
+// Signed record kinds (R-153): the export section they sit in, their seal
+// domain, and the legacy (pre-seal, unsigned) formula. Written out here so
+// this tool needs only canonicalize.js + seal.js's generic functions.
+const SIGNED_RECORD_KINDS = {
+  affirmationArtifacts: {
+    label: "affirmation",
+    domain: "invari.kos.affirmation.record.v1",
+    // models/AffirmationArtifact.js computeLegacyEntryHash
+    legacy: (r) =>
+      [
+        r.nodeRef,
+        r.response,
+        r.actor?.invariId,
+        new Date(r.createdAt?.$date ?? r.createdAt).toISOString(),
+        r.natureBundleHash,
+        r.sessionContext ?? "",
+      ].join("||"),
+  },
+  enforcementLog: {
+    label: "refusal record",
+    domain: "invari.kos.enforcement.record.v1",
+    // models/EnforcementLog.js computeLegacyEntryHash
+    legacy: (r) => {
+      const actorId = r.actor?.actorId?.$oid ?? r.actor?.actorId;
+      return [
+        r.assetId ?? "",
+        r.attemptedEventType ?? "",
+        r.nNodeRef ?? "",
+        r.outcome,
+        r.reasonCode ?? "",
+        actorId ? String(actorId) : "",
+        new Date(r.createdAt?.$date ?? r.createdAt).toISOString(),
+        r.natureBundleHash ?? "",
+        r.previousAssetEntryHash ?? "",
+        r.previousActorEntryHash ?? "",
+      ].join("||");
+    },
+  },
+};
+
+const UNSEALED = new Set(["_id", "__v", "entryHash", "entrySignature"]);
+
+function verifySignedRecord(kind, r, publicKeys) {
+  if (r.sealFormatVersion === 2) {
+    const body = {};
+    for (const [k, v] of Object.entries(r)) if (!UNSEALED.has(k)) body[k] = v;
+    const expected = computeHash({ domain: kind.domain, body, acceptTaggedJSON: true });
+    const pem = publicKeys?.[r.signingKeyId];
+    const signatureOk = !!pem && verifySignature(r.entryHash, r.entrySignature, importPublicKey(pem, r.signingKeyId));
+    return { format: 2, hashOk: expected === r.entryHash, signatureOk };
+  }
+  if (r.sealFormatVersion === undefined || r.sealFormatVersion === null) {
+    return { format: 1, hashOk: sha256(kind.legacy(r)) === r.entryHash, signatureOk: null };
+  }
+  return { format: r.sealFormatVersion, hashOk: false, signatureOk: false };
+}
+
+// Did this export write its records tagged? (3.2.0 and later.)
+function writesTaggedRecords(artifact) {
+  const v = String(artifact?.exportMetadata?.version || "0").split(".").map(Number);
+  return v[0] > 3 || (v[0] === 3 && (v[1] || 0) >= 2);
+}
 
 const sha256 = (s) => crypto.createHash("sha256").update(s).digest("hex");
 
@@ -207,6 +280,59 @@ function verifyExport(artifact, publicKeys) {
     });
   }
 
+  // (6) signed records, (7) affirmations cited by ledger entries
+  const tagged = writesTaggedRecords(artifact);
+  const signedSummary = [];
+  const affirmationsById = new Map();
+  for (const s of sections.records) {
+    const key = s.path.split(".").pop();
+    const kind = SIGNED_RECORD_KINDS[key];
+    if (!kind) continue;
+    const count = { sealed: 0, legacy: 0, unverifiable: 0 };
+    for (const r of s.data) {
+      const id = r?._id?.$oid ?? r?._id;
+      const where = `${s.path} ${kind.label} ${id}`;
+      if (key === "affirmationArtifacts") affirmationsById.set(String(id), r);
+      if (r?.sealFormatVersion === 2 && !tagged) {
+        count.unverifiable += 1;
+        continue;
+      }
+      let v;
+      try {
+        v = verifySignedRecord(kind, r, publicKeys);
+      } catch (err) {
+        problems.push(`${where}: ${err.message}`);
+        continue;
+      }
+      if (v.format !== 1 && v.format !== 2) problems.push(`${where}: unknown sealFormatVersion ${v.format}`);
+      else if (!v.hashOk) problems.push(`${where}: content does not match entryHash${v.format === 1 ? " (legacy formula)" : ""}`);
+      else if (v.format === 2 && !v.signatureOk) problems.push(`${where}: signature does not verify under key "${r.signingKeyId}"`);
+      else if (v.format === 2) count.sealed += 1;
+      else count.legacy += 1;
+    }
+    signedSummary.push({ section: s.path, kind: kind.label, ...count });
+    notes.push(
+      `${s.path}: ${count.sealed} signed ${kind.label}(s) verified, ${count.legacy} legacy (unsigned, legacy formula)` +
+        (count.unverifiable
+          ? `, ${count.unverifiable} signed but written untagged by a ${artifact?.exportMetadata?.version} export -- section integrity only`
+          : ""),
+    );
+  }
+  if (affirmationsById.size > 0) {
+    let cited = 0;
+    for (const e of byHash.values()) {
+      for (const ref of e.evidenceRefs || []) {
+        const a = affirmationsById.get(String(ref?.$oid ?? ref));
+        if (!a) continue;
+        cited += 1;
+        if (a.response !== "AFFIRM") {
+          problems.push(`${e.assetId} v${e.version} cites affirmation ${ref?.$oid ?? ref}, which is a ${a.response}, not an AFFIRM`);
+        }
+      }
+    }
+    notes.push(`${cited} affirmation(s) cited by ledger entries in this export, each an AFFIRM`);
+  }
+
   // (5) master root
   const master = artifact?.exportMetadata?.masterRootHash;
   if (master) {
@@ -226,6 +352,7 @@ function verifyExport(artifact, publicKeys) {
     ok: problems.length === 0,
     entryCount: byHash.size,
     chains: chainSummary,
+    signedRecords: signedSummary,
     problems,
     notes,
   };
