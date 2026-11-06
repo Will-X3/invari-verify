@@ -45,6 +45,13 @@ const { canonicalize } = require("./canonicalize");
 const SEAL_DOMAINS = Object.freeze({
   LEDGER_ENTRY: "invari.kos.ledger.entry.v4",
   RECEIPT_INPUT: "invari.kos.receipt.input.v4",
+  // R-76 (Part 59): a refusal record (EnforcementLog). Its own domain, so
+  // a refusal's signature can never be passed off as a ledger entry's.
+  ENFORCEMENT_RECORD: "invari.kos.enforcement.record.v1",
+  // R-153: an affirmation (AffirmationArtifact) -- a human's AFFIRM / DENY
+  // at an INTERPRETIVE gate, or its RETRACT. Its own domain, so an
+  // affirmation's signature can never pass for a refusal's or an entry's.
+  AFFIRMATION_RECORD: "invari.kos.affirmation.record.v1",
 });
 
 // Persisted as hashChainFormatVersion. v4 = canonical serializer,
@@ -249,10 +256,115 @@ function verifyLedgerEntrySeal(entry, { publicKeys = null, acceptTaggedJSON = fa
 }
 
 // -----------------------------------------------------
+// Refusal records (EnforcementLog) -- R-76, Part 59
+// -----------------------------------------------------
+// Same rule as ledger entries: the sealed body is the whole stored
+// record minus the fields that can't be part of their own seal. Before
+// Part 59 the record's hash covered ten fixed fields; the message, the
+// policy trace, the attempt and the actor's role could change without
+// breaking it. Now every field is covered, including any added later.
+// Records written before Part 59 have no sealFormatVersion and keep
+// verifying under the old formula (models/EnforcementLog.js).
+const ENFORCEMENT_UNSEALED_FIELDS = new Set(["_id", "__v", "entryHash", "entrySignature"]);
+
+function enforcementSealBody(record) {
+  const body = {};
+  for (const [k, v] of Object.entries(record)) {
+    if (!ENFORCEMENT_UNSEALED_FIELDS.has(k)) body[k] = v;
+  }
+  return body;
+}
+
+function hashEnforcementRecord(record, { acceptTaggedJSON = false } = {}) {
+  return computeHash({
+    domain: SEAL_DOMAINS.ENFORCEMENT_RECORD,
+    body: enforcementSealBody(record),
+    acceptTaggedJSON,
+  });
+}
+
+// Returns { entryHash, entrySignature } for a record that already
+// carries signingKeyId. `record` must be plain data in the form it will
+// be read back in (see EnforcementLog.buildSealed).
+function sealEnforcementRecord(record) {
+  if (!record.signingKeyId) throw new KeyringError("Enforcement record is missing signingKeyId");
+  const entryHash = hashEnforcementRecord(record);
+  return { entryHash, entrySignature: sign(entryHash, record.signingKeyId) };
+}
+
+function verifyEnforcementRecordSeal(record, { publicKeys = null, acceptTaggedJSON = false } = {}) {
+  const expected = hashEnforcementRecord(record, { acceptTaggedJSON });
+  const hashOk = expected === record.entryHash;
+  let signatureOk = false;
+  try {
+    signatureOk = verifySignature(
+      record.entryHash,
+      record.entrySignature,
+      publicKeyFor(record.signingKeyId, publicKeys),
+    );
+  } catch {
+    signatureOk = false; // unknown key id: not verified
+  }
+  return { ok: hashOk && signatureOk, hashOk, signatureOk, expected, actual: record.entryHash };
+}
+
+// -----------------------------------------------------
+// Affirmations (AffirmationArtifact) -- R-153
+// -----------------------------------------------------
+// Same rule again: the whole stored record minus the fields that can't be
+// part of their own seal. Before R-153 an affirmation's hash covered six
+// fields (nodeRef, response, actor invariId, createdAt, natureBundleHash,
+// sessionContext), unsigned: the prompt, evidence, the order / 4473 /
+// NICS links, the actor's role and a retraction's target could change
+// without breaking it. Records with no sealFormatVersion keep verifying
+// under that formula (models/AffirmationArtifact.js).
+const AFFIRMATION_UNSEALED_FIELDS = new Set(["_id", "__v", "entryHash", "entrySignature"]);
+
+function affirmationSealBody(record) {
+  const body = {};
+  for (const [k, v] of Object.entries(record)) {
+    if (!AFFIRMATION_UNSEALED_FIELDS.has(k)) body[k] = v;
+  }
+  return body;
+}
+
+function hashAffirmationRecord(record, { acceptTaggedJSON = false } = {}) {
+  return computeHash({
+    domain: SEAL_DOMAINS.AFFIRMATION_RECORD,
+    body: affirmationSealBody(record),
+    acceptTaggedJSON,
+  });
+}
+
+// `record` must be plain data in the form it will be read back in (see
+// AffirmationArtifact.buildSealed) and carry signingKeyId.
+function sealAffirmationRecord(record) {
+  if (!record.signingKeyId) throw new KeyringError("Affirmation record is missing signingKeyId");
+  const entryHash = hashAffirmationRecord(record);
+  return { entryHash, entrySignature: sign(entryHash, record.signingKeyId) };
+}
+
+function verifyAffirmationRecordSeal(record, { publicKeys = null, acceptTaggedJSON = false } = {}) {
+  const expected = hashAffirmationRecord(record, { acceptTaggedJSON });
+  const hashOk = expected === record.entryHash;
+  let signatureOk = false;
+  try {
+    signatureOk = verifySignature(
+      record.entryHash,
+      record.entrySignature,
+      publicKeyFor(record.signingKeyId, publicKeys),
+    );
+  } catch {
+    signatureOk = false; // unknown key id: not verified
+  }
+  return { ok: hashOk && signatureOk, hashOk, signatureOk, expected, actual: record.entryHash };
+}
+
+// -----------------------------------------------------
 // Receipt input commitment
 // -----------------------------------------------------
 // Replaces sha256(tenantSalt + JSON) (B-35, B-24): the salt was stored
-// in plaintext, so anyone who could read bbbinstances could forge a
+// in plaintext, so anyone who could read corebookinstances could forge a
 // commitment, and an instance without one (the Platform Ledger) couldn't
 // issue receipts. Computed over the bundle exactly as stored.
 
@@ -294,6 +406,12 @@ module.exports = {
   verifyLedgerEntrySeal,
   sealReceiptInput,
   verifyReceiptInputCommit,
+  hashEnforcementRecord,
+  sealEnforcementRecord,
+  verifyEnforcementRecordSeal,
+  hashAffirmationRecord,
+  sealAffirmationRecord,
+  verifyAffirmationRecordSeal,
   // exported for tests only
   _loadKeyring: loadKeyring,
 };

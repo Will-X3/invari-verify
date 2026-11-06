@@ -58,6 +58,8 @@ const crypto = require("crypto");
 const { verifyLedgerEntrySeal, computeHash, verifySignature, importPublicKey } = require(
   path.join(__dirname, "..", "seal"),
 );
+// T-44: entry format v5 -- the context anchors (kernel/entryFormat.js).
+const { entryAnchorProblem } = require(path.join(__dirname, "..", "entryFormat"));
 
 // Signed record kinds (R-153): the export section they sit in, their seal
 // domain, and the legacy (pre-seal, unsigned) formula. Written out here so
@@ -242,6 +244,8 @@ function verifyExport(artifact, publicKeys) {
     } catch (err) {
       problems.push(`${where}: ${err.message}`);
     }
+    const anchorProblem = entryAnchorProblem(e);
+    if (anchorProblem) problems.push(`${where}: ${anchorProblem}`);
   }
 
   // (3) chains
