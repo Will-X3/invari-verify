@@ -1,0 +1,10 @@
+{
+  "id": "V1",
+  "kind": "export",
+  "title": "Entry format v5: a licensee's export mixing v4 entries and v5 entries with context anchors",
+  "laws": [5, 6],
+  "subject": "entity 6ade4321b5d791882f224f7c (Forge Firearms, FFL)",
+  "exportedAt": "2026-11-07T02:52:10Z",
+  "export": "entity-export.json",
+  "expect": "PASS"
+}

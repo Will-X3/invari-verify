@@ -12,6 +12,8 @@ Git history timestamps every line in this file. Never edit a published row -- ad
 | M2 | `6abd4a31215382c134b8c544` | v11 (proposal claimed v10) | `3e2782129b5207b68de39dcea1c46a2f17458e694e21054ae20d3d9888cc2dbc` | 2026-10-17 21:54:47 | After the refusal, with the evidence (2026-10-21) |
 | M3 | `6abef588901bd31bbfe862d3` | v1 | `e1efd785431566b6b8e6c6a233288bca8e89c60dbe865fe94e7ea90edd555fdb` | 2026-10-02 00:06:32 | After the refusal, with the evidence (2026-10-21) |
 | M6 | `6abd4a31215382c134b8c544` | v11 | `3e2782129b5207b68de39dcea1c46a2f17458e694e21054ae20d3d9888cc2dbc` | 2026-10-17 21:53:59 | After the refusal, with the evidence (2026-10-21) |
+| V1 | `6ade48cfb5d791882f225948` | v6 (entry format 5) | `dbbf54a2c49913739f4ca4239038703c215c217ca6c3adf87aca11c2db0ceef1` | -- (accepted act, 2026-11-06 00:35:16) | After the export, with the evidence (2026-11-06) |
+| V1 | `entity::6ade4321b5d791882f224f7c` | v9 (entry format 5) | `24222ef204ffa81bad5230401027e5205a63206497e211407257e1cd5ea6faac` | -- (the export's own record, 2026-11-07 02:52:09) | After the export, with the evidence (2026-11-06) |
 
 M1-M6 are refusals from before this file existed, so their heads were published
 after the fact. From the next new refusal on, the head hash is added here at the

@@ -29,6 +29,8 @@ R1      PASS       PASS     as expected
 T1      FAIL       FAIL     as expected
 T2      FAIL       FAIL     as expected
 T3      FAIL       FAIL     as expected
+T4      FAIL       FAIL     as expected
+V1      PASS       PASS     as expected
 
 ALL CASES AS EXPECTED
 ```
@@ -54,11 +56,13 @@ Compare them before you trust any PASS.
 | [T1](cases/T1) | M1 with one sealed field edited -- a tamper test | 06 | **FAIL** |
 | [T2](cases/T2) | R1 with its signed message edited -- a tamper test | 06 | **FAIL** |
 | [T3](cases/T3) | A1 with one affirmation's prompt rewritten and every root recomputed -- a tamper test | -- | **FAIL** |
+| [T4](cases/T4) | V1 with one entry's `contextBundleHash` edited and every root recomputed -- a tamper test | 05, 06 | **FAIL** |
+| [V1](cases/V1) | Entry format v5: v4 entries and v5 entries carrying sealed context anchors, in one licensee export | 05 Consequence Requires Provenance, 06 | PASS |
 
 M cases are refused by the kernel: the evidence is a signed proposal, a receipt and
 the chain. R cases are refused by the workflow before anything reaches the kernel, so
 there is no receipt: the evidence is the sealed refusal record, checked by
-`kernel/tools/verifyRefusalRecord.js`. A cases are accepted acts: the evidence is a
+`kernel/tools/verifyRefusalRecord.js`. A and V cases are accepted acts: the evidence is a
 whole chain export, checked by `kernel/tools/verifyExport.js` -- every ledger entry,
 every signed affirmation, and that each affirmation the entry cites is an AFFIRM.
 
@@ -67,6 +71,8 @@ every signed affirmation, and that each affirmation the entry cites is an AFFIRM
 1. **The chain.** Every entry's hash recomputes from its own content (SHA-256 over
    `invari.kos.ledger.entry.v4\n` + canonical JSON), every Ed25519 signature verifies
    under the published key, versions start at v1 and every `previousEntryHash` links.
+   An entry in format v5 must also carry its context anchors (`contextBundleHash`,
+   `contextSnapshotTimestamp`), which are inside that hash (V1, T4).
 2. **The receipt.** Its `inputCommitHash` recomputes from `{tenantId, proposal}` and
    its signature verifies: Invari's kernel issued a receipt for exactly this proposal.
 3. The proposal was for this asset, formed against the stated version, by the tenant
