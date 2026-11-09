@@ -1,0 +1,10 @@
+{
+  "id": "T6",
+  "kind": "export",
+  "title": "Tamper test: A3 with the withdrawal (RETRACT) removed and every root recomputed",
+  "laws": [
+    6
+  ],
+  "export": "entity-export.json",
+  "expect": "FAIL"
+}

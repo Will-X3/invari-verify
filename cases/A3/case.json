@@ -1,0 +1,16 @@
+{
+  "id": "A3",
+  "kind": "export",
+  "title": "An onboarding with an affirmation withdrawn and given again: the whole chain, and the commit cites the one in force",
+  "laws": [
+    2,
+    6
+  ],
+  "subject": "entity 6af13ae1061a867dcfe13324 (Vanta Firearms, FFL)",
+  "exportedAt": "2026-11-09T20:47:37Z",
+  "export": "entity-export.json",
+  "requireSigned": {
+    "affirmationArtifacts": 6
+  },
+  "expect": "PASS"
+}

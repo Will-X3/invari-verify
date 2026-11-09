@@ -7,9 +7,9 @@
  * =====================================================
  *
  * Verifies an Invari chain export WITHOUT Invari: no database, no
- * network, no npm packages. Needs this file plus kernel/canonicalize.js
- * and kernel/seal.js (both dependency-free), and Invari's PUBLIC
- * signing keys.
+ * network, no npm packages. Needs this file plus kernel/canonicalize.js,
+ * kernel/seal.js, kernel/affirmationChain.js and kernel/gateCheck.js (all
+ * dependency-free), and Invari's PUBLIC signing keys.
  *
  *   node verifyExport.js <export.json> [public-keys.json] [--require-signed <section>=<n> ...]
  *
@@ -42,12 +42,25 @@
  *      controllers use (see masterCandidates)
  *   6. signed records (R-153, export format 3.2.0): every record in an
  *      affirmationArtifacts or enforcementLog section. Sealed ones
- *      (sealFormatVersion 2) by their own hash and Ed25519 signature;
+ *      (sealFormatVersion 2, and 3 for affirmations) by their own hash and
+ *      Ed25519 signature;
  *      older ones by their legacy unsigned formula, reported as legacy.
  *      A 3.1.0 export wrote these records untagged, so a sealed record
  *      there can't be recomputed -- reported as a note, not a failure.
  *   7. affirmations cited by a ledger entry (evidenceRefs) that are in
  *      this export must be AFFIRM records that verify
+ *   8. T-88a (export format 3.3.0): affirmation chains. An export carries
+ *      the WHOLE chain of every subject it cites; each must be numbered
+ *      1..n with no gap, linked, one subject type, in time order, every
+ *      RETRACT withdrawing an earlier AFFIRM (kernel/affirmationChain.js);
+ *      and each cited affirmation must be its gate's latest record at the
+ *      citing entry's eventTimestamp -- not withdrawn or superseded before
+ *      the commit. Records of formats 1 and 2 are unchained (legacy).
+ *   9. T-88b: an entry carrying gateReads (the kernel's in-commit gate read)
+ *      agrees with its subject's chain in this export: the head it read is
+ *      present with the same hash, each gate record is the one it read and
+ *      the gate's latest up to that head, and evidenceRefs are exactly those
+ *      records (kernel/gateCheck.js gateReadsProblems).
  *
  * Exit code 0 = all checks pass, 1 = a check failed, 2 = usage/input error.
  */
@@ -60,6 +73,10 @@ const { verifyLedgerEntrySeal, computeHash, verifySignature, importPublicKey } =
 );
 // T-44: entry format v5 -- the context anchors (kernel/entryFormat.js).
 const { entryAnchorProblem } = require(path.join(__dirname, "..", "entryFormat"));
+// T-88a: the affirmation chain rules, shared with the server.
+const { verifyAffirmationChain, latestForGate, idOf, timeOf } = require(path.join(__dirname, "..", "affirmationChain"));
+// T-88b: gate reads against the exported chain.
+const { gateReadsProblems, gateExceptionProblems } = require(path.join(__dirname, "..", "gateCheck"));
 
 // Signed record kinds (R-153): the export section they sit in, their seal
 // domain, and the legacy (pre-seal, unsigned) formula. Written out here so
@@ -68,6 +85,7 @@ const SIGNED_RECORD_KINDS = {
   affirmationArtifacts: {
     label: "affirmation",
     domain: "invari.kos.affirmation.record.v1",
+    sealedFormats: [2, 3], // 3 = chained (T-88a)
     // models/AffirmationArtifact.js computeLegacyEntryHash
     legacy: (r) =>
       [
@@ -82,6 +100,7 @@ const SIGNED_RECORD_KINDS = {
   enforcementLog: {
     label: "refusal record",
     domain: "invari.kos.enforcement.record.v1",
+    sealedFormats: [2],
     // models/EnforcementLog.js computeLegacyEntryHash
     legacy: (r) => {
       const actorId = r.actor?.actorId?.$oid ?? r.actor?.actorId;
@@ -104,13 +123,13 @@ const SIGNED_RECORD_KINDS = {
 const UNSEALED = new Set(["_id", "__v", "entryHash", "entrySignature"]);
 
 function verifySignedRecord(kind, r, publicKeys) {
-  if (r.sealFormatVersion === 2) {
+  if (kind.sealedFormats.includes(r.sealFormatVersion)) {
     const body = {};
     for (const [k, v] of Object.entries(r)) if (!UNSEALED.has(k)) body[k] = v;
     const expected = computeHash({ domain: kind.domain, body, acceptTaggedJSON: true });
     const pem = publicKeys?.[r.signingKeyId];
     const signatureOk = !!pem && verifySignature(r.entryHash, r.entrySignature, importPublicKey(pem, r.signingKeyId));
-    return { format: 2, hashOk: expected === r.entryHash, signatureOk };
+    return { format: r.sealFormatVersion, hashOk: expected === r.entryHash, signatureOk };
   }
   if (r.sealFormatVersion === undefined || r.sealFormatVersion === null) {
     return { format: 1, hashOk: sha256(kind.legacy(r)) === r.entryHash, signatureOk: null };
@@ -118,11 +137,13 @@ function verifySignedRecord(kind, r, publicKeys) {
   return { format: r.sealFormatVersion, hashOk: false, signatureOk: false };
 }
 
-// Did this export write its records tagged? (3.2.0 and later.)
-function writesTaggedRecords(artifact) {
+// Is the export at least this format version (MAJOR.MINOR)?
+function exportAtLeast(artifact, major, minor) {
   const v = String(artifact?.exportMetadata?.version || "0").split(".").map(Number);
-  return v[0] > 3 || (v[0] === 3 && (v[1] || 0) >= 2);
+  return v[0] > major || (v[0] === major && (v[1] || 0) >= minor);
 }
+// Did this export write its records tagged? (3.2.0 and later.)
+const writesTaggedRecords = (artifact) => exportAtLeast(artifact, 3, 2);
 
 const sha256 = (s) => crypto.createHash("sha256").update(s).digest("hex");
 
@@ -296,12 +317,12 @@ function verifyExport(artifact, publicKeys) {
     const key = s.path.split(".").pop();
     const kind = SIGNED_RECORD_KINDS[key];
     if (!kind) continue;
-    const count = { sealed: 0, legacy: 0, unverifiable: 0 };
+    const count = { sealed: 0, chained: 0, legacy: 0, unverifiable: 0 };
     for (const r of s.data) {
       const id = r?._id?.$oid ?? r?._id;
       const where = `${s.path} ${kind.label} ${id}`;
       if (key === "affirmationArtifacts") affirmationsById.set(String(id), r);
-      if (r?.sealFormatVersion === 2 && !tagged) {
+      if (kind.sealedFormats.includes(r?.sealFormatVersion) && !tagged) {
         count.unverifiable += 1;
         continue;
       }
@@ -312,15 +333,19 @@ function verifyExport(artifact, publicKeys) {
         problems.push(`${where}: ${err.message}`);
         continue;
       }
-      if (v.format !== 1 && v.format !== 2) problems.push(`${where}: unknown sealFormatVersion ${v.format}`);
+      if (v.format !== 1 && !kind.sealedFormats.includes(v.format)) problems.push(`${where}: unknown sealFormatVersion ${v.format}`);
       else if (!v.hashOk) problems.push(`${where}: content does not match entryHash${v.format === 1 ? " (legacy formula)" : ""}`);
-      else if (v.format === 2 && !v.signatureOk) problems.push(`${where}: signature does not verify under key "${r.signingKeyId}"`);
-      else if (v.format === 2) count.sealed += 1;
-      else count.legacy += 1;
+      else if (v.format !== 1 && !v.signatureOk) problems.push(`${where}: signature does not verify under key "${r.signingKeyId}"`);
+      else if (v.format !== 1) {
+        count.sealed += 1;
+        if (v.format === 3) count.chained += 1;
+      } else count.legacy += 1;
     }
     signedSummary.push({ section: s.path, kind: kind.label, ...count });
     notes.push(
-      `${s.path}: ${count.sealed} signed ${kind.label}(s) verified, ${count.legacy} legacy (unsigned, legacy formula)` +
+      `${s.path}: ${count.sealed} signed ${kind.label}(s) verified` +
+        (count.chained ? ` (${count.chained} chained)` : "") +
+        `, ${count.legacy} legacy (unsigned, legacy formula)` +
         (count.unverifiable
           ? `, ${count.unverifiable} signed but written untagged by a ${artifact?.exportMetadata?.version} export -- section integrity only`
           : ""),
@@ -339,6 +364,91 @@ function verifyExport(artifact, publicKeys) {
       }
     }
     notes.push(`${cited} affirmation(s) cited by ledger entries in this export, each an AFFIRM`);
+  }
+
+  // (8) affirmation chains (T-88a)
+  if (affirmationsById.size > 0) {
+    const kind = SIGNED_RECORD_KINDS.affirmationArtifacts;
+    const bySubject = new Map();
+    for (const r of affirmationsById.values()) {
+      const k = String(r.assetId);
+      if (!bySubject.has(k)) bySubject.set(k, []);
+      bySubject.get(k).push(r);
+    }
+    const verifyOne = (r) => {
+      if (!tagged && kind.sealedFormats.includes(r?.sealFormatVersion)) return { valid: true, format: r.sealFormatVersion };
+      try {
+        const v = verifySignedRecord(kind, r, publicKeys);
+        return { valid: v.hashOk && v.signatureOk !== false, format: v.format, reason: "does not verify" };
+      } catch (err) {
+        return { valid: false, format: r?.sealFormatVersion, reason: err.message };
+      }
+    };
+    let chained = 0;
+    let broken = 0;
+    for (const [subject, records] of bySubject) {
+      const c = verifyAffirmationChain(records, { verifyRecord: verifyOne });
+      if (c.length > 0) chained += 1;
+      if (c.problems.some((p) => p.code !== "RECORD_INVALID")) broken += 1;
+      for (const p of c.problems) {
+        if (p.code === "RECORD_INVALID") continue; // reported under (6)
+        problems.push(`affirmation chain ${subject} ${p.at ?? ""}: ${p.code} -- ${p.detail}`);
+      }
+    }
+    // Cited records must decide their gate at the citing entry's time. Only
+    // exports from 3.3.0 carry every record of a cited subject; an older
+    // export carries the cited records alone, so the check would say nothing.
+    if (exportAtLeast(artifact, 3, 3)) {
+      let inForce = 0;
+      for (const e of byHash.values()) {
+        const tau = e.eventTimestamp ?? e.createdAt;
+        for (const ref of e.evidenceRefs || []) {
+          const a = affirmationsById.get(String(ref?.$oid ?? ref));
+          if (!a || a.response !== "AFFIRM" || !tau) continue;
+          const decider = latestForGate(bySubject.get(String(a.assetId)) || [], { nodeRef: a.nodeRef, tau });
+          const aid = String(a._id?.$oid ?? a._id);
+          if (!decider || String(decider._id?.$oid ?? decider._id) !== aid) {
+            problems.push(
+              `${e.assetId} v${e.version} cites affirmation ${aid} (${a.nodeRef}), which was not the gate's latest record at the entry's eventTimestamp`,
+            );
+          } else inForce += 1;
+        }
+      }
+      notes.push(
+        `${chained} affirmation chain(s) checked, ${broken ? `${broken} BROKEN` : "all intact"}; ${inForce} cited affirmation(s) still in force at their commit`,
+      );
+    } else {
+      notes.push(
+        `${chained} affirmation chain(s) checked, ${broken ? `${broken} BROKEN` : "all intact"}; this ${artifact?.exportMetadata?.version} export carries cited records only, so "still in force at the commit" is not checked`,
+      );
+    }
+  }
+
+  // (9) gate reads (T-88b)
+  for (const e of byHash.values()) {
+    for (const p of gateExceptionProblems(e)) problems.push(`${e.assetId} v${e.version} ${p}`);
+    if (e.gateException && !gateExceptionProblems(e).length) notes.push(`${e.assetId} v${e.version}: declared gate exception ${e.gateException.basis}`);
+  }
+  {
+    const gated = [...byHash.values()].filter((e) => e.gateReads);
+    if (gated.length > 0) {
+      const bySubject = new Map();
+      for (const r of affirmationsById.values()) {
+        const k = String(r.assetId);
+        if (!bySubject.has(k)) bySubject.set(k, []);
+        bySubject.get(k).push(r);
+      }
+      let ok = 0;
+      for (const e of gated) {
+        const records = bySubject.get(String(e.gateReads.subjectId)) || [];
+        const ps = records.length
+          ? gateReadsProblems(e, records, { idOf, timeOf })
+          : [`its gate subject ${e.gateReads.subjectId} has no affirmation records in this export`];
+        for (const p of ps) problems.push(`${e.assetId} v${e.version} gateReads: ${p}`);
+        if (!ps.length) ok += 1;
+      }
+      notes.push(`${ok} of ${gated.length} gated entr${gated.length === 1 ? "y" : "ies"}: gate reads match the exported affirmation chain`);
+    }
   }
 
   // (5) master root

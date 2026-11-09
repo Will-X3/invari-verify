@@ -52,6 +52,11 @@ const SEAL_DOMAINS = Object.freeze({
   // at an INTERPRETIVE gate, or its RETRACT. Its own domain, so an
   // affirmation's signature can never pass for a refusal's or an entry's.
   AFFIRMATION_RECORD: "invari.kos.affirmation.record.v1",
+  // T-88c: a Glyph affirmation -- a person's AFFIRM / DENY / RETRACT of a
+  // whole declaration version (a Capability package, later an Authority
+  // version, a promotion, an amendment). Its own domain, so it can never
+  // pass for a gate affirmation, a refusal or an entry.
+  GLYPH_AFFIRMATION_RECORD: "invari.kos.glyph.affirmation.v1",
 });
 
 // Persisted as hashChainFormatVersion. v4 = canonical serializer,
@@ -361,6 +366,37 @@ function verifyAffirmationRecordSeal(record, { publicKeys = null, acceptTaggedJS
 }
 
 // -----------------------------------------------------
+// Glyph affirmations (GlyphAffirmation) -- T-88c
+// -----------------------------------------------------
+// The same rule: the whole stored record minus the fields that can't be
+// part of their own seal, under its own domain.
+function hashGlyphAffirmationRecord(record, { acceptTaggedJSON = false } = {}) {
+  return computeHash({
+    domain: SEAL_DOMAINS.GLYPH_AFFIRMATION_RECORD,
+    body: affirmationSealBody(record),
+    acceptTaggedJSON,
+  });
+}
+
+function sealGlyphAffirmationRecord(record) {
+  if (!record.signingKeyId) throw new KeyringError("Glyph affirmation record is missing signingKeyId");
+  const entryHash = hashGlyphAffirmationRecord(record);
+  return { entryHash, entrySignature: sign(entryHash, record.signingKeyId) };
+}
+
+function verifyGlyphAffirmationRecordSeal(record, { publicKeys = null, acceptTaggedJSON = false } = {}) {
+  const expected = hashGlyphAffirmationRecord(record, { acceptTaggedJSON });
+  const hashOk = expected === record.entryHash;
+  let signatureOk = false;
+  try {
+    signatureOk = verifySignature(record.entryHash, record.entrySignature, publicKeyFor(record.signingKeyId, publicKeys));
+  } catch {
+    signatureOk = false; // unknown key id: not verified
+  }
+  return { ok: hashOk && signatureOk, hashOk, signatureOk, expected, actual: record.entryHash };
+}
+
+// -----------------------------------------------------
 // Receipt input commitment
 // -----------------------------------------------------
 // Replaces sha256(tenantSalt + JSON) (B-35, B-24): the salt was stored
@@ -412,6 +448,9 @@ module.exports = {
   hashAffirmationRecord,
   sealAffirmationRecord,
   verifyAffirmationRecordSeal,
+  hashGlyphAffirmationRecord,
+  sealGlyphAffirmationRecord,
+  verifyGlyphAffirmationRecordSeal,
   // exported for tests only
   _loadKeyring: loadKeyring,
 };

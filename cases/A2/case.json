@@ -1,0 +1,17 @@
+{
+  "id": "A2",
+  "kind": "export",
+  "title": "An onboarding whose gates the kernel checked inside the commit, and the sealed gate reads",
+  "laws": [
+    2,
+    5,
+    6
+  ],
+  "subject": "entity 6af141abfd9c9a28ce26d730 (Legion Firearms, FFL)",
+  "exportedAt": "2026-11-09T20:48:02Z",
+  "export": "entity-export.json",
+  "requireSigned": {
+    "affirmationArtifacts": 4
+  },
+  "expect": "PASS"
+}

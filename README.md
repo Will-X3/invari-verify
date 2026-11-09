@@ -21,6 +21,8 @@ node verify-all.js
 Case    Expected   Got
 ------  ---------  -------  ------------
 A1      PASS       PASS     as expected
+A2      PASS       PASS     as expected
+A3      PASS       PASS     as expected
 M1      PASS       PASS     as expected
 M2      PASS       PASS     as expected
 M3      PASS       PASS     as expected
@@ -30,6 +32,8 @@ T1      FAIL       FAIL     as expected
 T2      FAIL       FAIL     as expected
 T3      FAIL       FAIL     as expected
 T4      FAIL       FAIL     as expected
+T5      FAIL       FAIL     as expected
+T6      FAIL       FAIL     as expected
 V1      PASS       PASS     as expected
 
 ALL CASES AS EXPECTED
@@ -48,6 +52,8 @@ Compare them before you trust any PASS.
 | Case | What it shows | Law | Expected |
 |------|---------------|-----|----------|
 | [A1](cases/A1) | A licensee's onboarding, and the three signed affirmations (license verified, legitimacy judged, onboarding authorized) the ledger entry cites | -- | PASS |
+| [A2](cases/A2) | An onboarding whose four gates the kernel checked **inside the commit**, at its own pinned time, and the gate reads it sealed in the entry | 02, 05, 06 | PASS |
+| [A3](cases/A3) | An affirmation withdrawn and given again: the whole affirmation chain, and the entry cites the one in force, not the withdrawn one | 02, 06 | PASS |
 | [M1](cases/M1) | A second "manufactured" event for an asset that already has one (`MANUFACTURE_NOT_GENESIS`) | 06 History Cannot Be Erased | PASS |
 | [M2](cases/M2) | A stale proposal: formed against v10 after v11 was committed (`STALE_VERSION`) | 02 Contemporaneous Validity | PASS |
 | [M3](cases/M3) | A sale to a customer without an executed Form 4473 (27 CFR 478.124) | 04, 07 | PASS |
@@ -57,6 +63,8 @@ Compare them before you trust any PASS.
 | [T2](cases/T2) | R1 with its signed message edited -- a tamper test | 06 | **FAIL** |
 | [T3](cases/T3) | A1 with one affirmation's prompt rewritten and every root recomputed -- a tamper test | -- | **FAIL** |
 | [T4](cases/T4) | V1 with one entry's `contextBundleHash` edited and every root recomputed -- a tamper test | 05, 06 | **FAIL** |
+| [T5](cases/T5) | A2 with the newest affirmation removed and every root recomputed -- the chain still looks whole; the sealed gate reads catch it | 02, 06 | **FAIL** |
+| [T6](cases/T6) | A3 with the withdrawal removed and every root recomputed -- a withdrawn judgment brought back | 06 | **FAIL** |
 | [V1](cases/V1) | Entry format v5: v4 entries and v5 entries carrying sealed context anchors, in one licensee export | 05 Consequence Requires Provenance, 06 | PASS |
 
 M cases are refused by the kernel: the evidence is a signed proposal, a receipt and
@@ -81,6 +89,20 @@ every signed affirmation, and that each affirmation the entry cites is an AFFIRM
 5. The signed proposal names the head it was evaluated against, and (with
    `expectHead`) that head equals the checkpoint in [CHECKPOINTS.md](CHECKPOINTS.md).
 
+For an export (A and V cases), also:
+
+6. **Affirmation chains** (exports from 3.3.0 on). Each human judgment is a link in its
+   subject's chain: numbered 1..n with no gap, each naming the hash of the one before,
+   every withdrawal (RETRACT) pointing back at an earlier AFFIRM of the same gate. The
+   export carries the whole chain of every subject an entry cites, and each cited
+   affirmation must still have been in force -- the gate's latest record -- when the
+   entry was committed (A3, T6).
+7. **Gate reads.** An entry whose gates the kernel checked inside the commit carries
+   `gateReads`: what it read of the affirmation chain at that moment, sealed in the
+   entry. The chain in the export must agree -- the head it read, each gate record, and
+   `evidenceRefs` exactly those records. This is what catches a deleted *newest* record,
+   which leaves no gap behind it (A2, T5).
+
 **Stale proposals (M2).** The signed bundle carries the version the proposer *claimed*
 and the head the kernel *actually evaluated against*. For a stale proposal those differ
 -- that difference is the evidence. The verifier accepts it only if the signed head is a
@@ -96,6 +118,13 @@ A signed head that is an earlier version, or a timestamp outside that window, fa
   proposal against an intact chain, and nothing written from it. (Since 17 October
   2026 the separate refusal *record* is sealed and signed; signing the receipt outcome
   is on the roadmap.)
+- **A chain's newest record is protected only by an entry that relied on it.** Deleting
+  the last affirmation of a subject leaves an intact-looking chain; the deletion is
+  caught when a sealed entry's gate reads name it (T5). Onboardings committed before
+  9 November 2026 have no gate reads (A3).
+- **Package signatures are not in exports yet.** A signature on a whole policy package
+  (recorded on Invari's own chain since 9 November 2026) can be checked inside Invari
+  but not yet from this folder.
 - **Whoever holds Invari's private key could re-sign a rewritten chain.** The defence
   is a head hash published somewhere Invari can't rewrite, *before* the export -- see
   [CHECKPOINTS.md](CHECKPOINTS.md).
@@ -112,7 +141,8 @@ committed so you can see what a failure looks like.
 public-keys.json   Invari's published signing keys (compare with invari.systems)
 CHECKPOINTS.md     published chain heads, one per case, with dates
 verify-all.js      runs every case against its expected result
-kernel/            the verifier source -- canonicalize.js, seal.js, tools/
+kernel/            the verifier source -- canonicalize.js, seal.js, entryFormat.js,
+                   affirmationChain.js, gateCheck.js, glyphAffirmationChain.js, tools/
 cases/<ID>/        README.md, case.json, asset-export.json, receipt-<id>.json
                    (R cases: README.md, case.json, refusal-record.json)
 ```
