@@ -80,7 +80,10 @@ every signed affirmation, and that each affirmation the entry cites is an AFFIRM
    `invari.kos.ledger.entry.v4\n` + canonical JSON), every Ed25519 signature verifies
    under the published key, versions start at v1 and every `previousEntryHash` links.
    An entry in format v5 must also carry its context anchors (`contextBundleHash`,
-   `contextSnapshotTimestamp`), which are inside that hash (V1, T4).
+   `contextSnapshotTimestamp`), which are inside that hash (V1, T4). An entry in
+   format v6 (from 10 November 2026) must also carry `natureBundleRef` -- the
+   `{ bundleId, version, hash }` of the certified bundle that governed it, its `hash`
+   equal to the entry's `natureBundleHash` (or null when no bundle governed).
 2. **The receipt.** Its `inputCommitHash` recomputes from `{tenantId, proposal}` and
    its signature verifies: Invari's kernel issued a receipt for exactly this proposal.
 3. The proposal was for this asset, formed against the stated version, by the tenant
@@ -125,6 +128,10 @@ A signed head that is an earlier version, or a timestamp outside that window, fa
 - **Package signatures are not in exports yet.** A signature on a whole policy package
   (recorded on Invari's own chain since 9 November 2026) can be checked inside Invari
   but not yet from this folder.
+- **The platform's genesis declaration is not in an export yet.** Since 10 November
+  2026 the platform's first entry seals the admission rules it rests on (a declaration
+  and a code hash), the signing-key commitment and its first governor. Invari's own
+  verifier checks it; this folder will once a platform-chain case is published.
 - **Whoever holds Invari's private key could re-sign a rewritten chain.** The defence
   is a head hash published somewhere Invari can't rewrite, *before* the export -- see
   [CHECKPOINTS.md](CHECKPOINTS.md).
