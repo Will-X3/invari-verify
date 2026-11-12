@@ -83,7 +83,14 @@ every signed affirmation, and that each affirmation the entry cites is an AFFIRM
    `contextSnapshotTimestamp`), which are inside that hash (V1, T4). An entry in
    format v6 (from 10 November 2026) must also carry `natureBundleRef` -- the
    `{ bundleId, version, hash }` of the certified bundle that governed it, its `hash`
-   equal to the entry's `natureBundleHash` (or null when no bundle governed).
+   equal to the entry's `natureBundleHash` (or null when no bundle governed). An entry in
+   format v7 (from 12 November 2026) must also carry `platformPolicyRef` -- the
+   `{ mode, version, platformHash }` of the platform policy the kernel evaluated it
+   under: mode `PACKAGE` names the admitted version of the platform's own package
+   (package #0) and its hash; mode `CODE_PRE_PACKAGE`, before any version is admitted,
+   has both null. Like the anchors, it is inside the entry hash. Whether that version
+   was in fact the one in force at the entry's time is checked by the platform's
+   `verifyChains` against the platform chain, not by this folder.
 2. **The receipt.** Its `inputCommitHash` recomputes from `{tenantId, proposal}` and
    its signature verifies: Invari's kernel issued a receipt for exactly this proposal.
 3. The proposal was for this asset, formed against the stated version, by the tenant
