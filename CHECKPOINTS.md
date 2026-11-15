@@ -16,6 +16,7 @@ Git history timestamps every line in this file. Never edit a published row -- ad
 | V1 | `entity::6ade4321b5d791882f224f7c` | v9 (entry format 5) | `24222ef204ffa81bad5230401027e5205a63206497e211407257e1cd5ea6faac` | -- (the export's own record, 2026-11-07 02:52:09) | After the export, with the evidence (2026-11-06) |
 | A2 | `entity::6af141abfd9c9a28ce26d730` | v5 (the export's own record) | `a1b9ea41dc92990061eceb433198204633787db73e66aa7b2cda0203e5117411` | -- (accepted act; onboarding 2026-11-09 03:44:43) | After the export, with the evidence (2026-11-09) |
 | A3 | `entity::6af13ae1061a867dcfe13324` | v5 (the export's own record) | `a34c3489b5bbb859c5691fe07d620d9461bf55cd88e9af82ae566210417f6378` | -- (accepted act; onboarding 2026-11-09 03:15:45) | After the export, with the evidence (2026-11-09) |
+| V2 | `entity::6afa1a9d2e98d85fe889ddf3` | v8 (entry format 7, the export's own record) | `aa9535794803455f100b3f8afc3a2306e0af113c1c7fa4c87653dbf53e262158` | -- (accepted act; onboarding 2026-11-15) | After the export, with the evidence (2026-11-15) |
 
 M1-M6 are refusals from before this file existed, so their heads were published
 after the fact. From the next new refusal on, the head hash is added here at the

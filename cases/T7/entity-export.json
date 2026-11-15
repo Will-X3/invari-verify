@@ -1,0 +1,1345 @@
+{
+  "exportMetadata": {
+    "version": "3.3.0",
+    "exportedAt": "2026-11-15T20:48:30.713Z",
+    "exportedBy": {
+      "invariId": "INV-97F75B83",
+      "role": "Entity_Employee",
+      "rateLimitExempt": false
+    },
+    "subject": {
+      "type": "entity",
+      "id": "6afa1a9d2e98d85fe889ddf3",
+      "displayName": "Mesa Example Arms (synthetic)",
+      "entityId": "6afa1a9d2e98d85fe889ddf3",
+      "entityType": "FFL"
+    },
+    "exportPath": "FREE",
+    "billing": null,
+    "auditChain": "entity::6afa1a9d2e98d85fe889ddf3",
+    "sections": {
+      "entityChain": true,
+      "assetChain": false,
+      "exportRecord": false,
+      "affirmationArtifacts": true,
+      "assetSnapshots": false,
+      "transferRecords": false,
+      "enforcementLog": false,
+      "form4473Records": false
+    },
+    "masterRootHash": "d9ab5eb5e459d624a11b24238d860734c788535b0f42947d79e3f0abd768e9bf",
+    "verification": {
+      "algorithm": "SHA-256 (entry hashes and roots); Ed25519 (entry signatures)",
+      "hashChainFormatVersion": 4,
+      "signingKeys": {
+        "k-2026-09": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAtOBsh1EjS7KgXXiFKBwZkf3/38f0GdewpP941KJa2B8=\n-----END PUBLIC KEY-----\n"
+      },
+      "instructions": [
+        "1. Sections: a LEDGER section is any object with rootHash and an entries array of ledger entries; a RECORD section is any object with rootHash and a records (or assets) array. Each has its own rootHash -- verify independently.",
+        "2. Ledger section rootHash = SHA-256 of its entries' entryHash values concatenated, in the order listed. Record section rootHash = SHA-256(JSON.stringify(records)); asset snapshots: SHA-256(JSON.stringify(assets)).",
+        "3. Recompute each ledger entry's entryHash: SHA-256 of the text 'invari.kos.ledger.entry.v4', a newline, then the canonical form of the entry without _id, entryHash and entrySignature (sorted keys; ObjectIds and dates appear as single-key $oid / $date objects and encode exactly as written).",
+        "4. Verify each entrySignature (Ed25519, base64) over the 32 raw bytes of entryHash with Invari's published public key for signingKeyId.",
+        "5. Chains: group entries by assetId, sort by version; versions must be contiguous and each previousEntryHash must equal the prior entry's entryHash. A chain may begin after v1 -- a firearm received from another licensee, or the exportRecord on Invari's ledger -- and its first previousEntryHash then points to an entry outside this file (join it with the previous holder's export).",
+        "6. masterRootHash = SHA-256 of every ledger section's rootHash followed by every record section's rootHash, each group in the order the sections appear in this file (kernel/tools/verifyExport.js applies this rule).",
+        "7. Signed records: a record in affirmationArtifacts or enforcementLog with sealFormatVersion 2 (3 for a chained affirmation) verifies like a ledger entry -- SHA-256 of its domain ('invari.kos.affirmation.record.v1' or 'invari.kos.enforcement.record.v1'), a newline, then the canonical form of the record without _id, entryHash and entrySignature; then its entrySignature with the published key for signingKeyId. A record without sealFormatVersion was written under an older, unsigned formula and verifies only by that (kernel/tools/verifyExport.js reports it as legacy).",
+        "8. Affirmation chains (3.3.0): a record with sealFormatVersion 3 verifies as in 7 and is also a link in its subject's chain (assetId). Group by assetId, sort by chainSequence: numbered 1..n with no gap, each previousRecordHash equal to the prior record's entryHash (null on the first), one subjectType, createdAt never decreasing, and every RETRACT naming an earlier AFFIRM of the same nodeRef. This file carries the whole chain of every subject a ledger entry cites; a cited affirmation must be its gate's latest record at the citing entry's eventTimestamp."
+      ],
+      "note": "Ledger entries and signed records verify with only Invari's public key; no Invari infrastructure is required."
+    },
+    "exportEntryHash": "aa9535794803455f100b3f8afc3a2306e0af113c1c7fa4c87653dbf53e262158",
+    "exportEntryVersion": 8
+  },
+  "entityChain": {
+    "rootHash": "b23de5359dd0276cf209aeeeafb7c1b0c280aaf4c395cef7e073be16edbaf0c1",
+    "entryCount": 8,
+    "entries": [
+      {
+        "_id": {
+          "$oid": "6afa1a9d2e98d85fe889de01"
+        },
+        "assetId": "entity::6afa1a9d2e98d85fe889ddf3",
+        "coreBookInstanceId": {
+          "$oid": "6afa1a9d2e98d85fe889ddf5"
+        },
+        "tenantContext": {
+          "type": "FFL",
+          "tenantId": {
+            "$oid": "6afa1a9d2e98d85fe889ddf3"
+          }
+        },
+        "version": 1,
+        "previousEntryHash": null,
+        "entryHash": "26d3f362dadd1dd48709dcc91efb69ffc69ce0f53249e3df3dfcf0b6a5bab959",
+        "entrySignature": "bD3kNaifFZuHDJZ6cfrOWx9cUeOVQ2AdECuDcjmPnptL4Z8LErexbx63Xe0iwBMB7pjyhKG76jGXQgLt5FbKBg==",
+        "signingKeyId": "k-2026-09",
+        "hashChainFormatVersion": 4,
+        "entryFormatVersion": 7,
+        "contextBundleHash": "57e9bc58c16fb5ef96196933676a1360356c7e44798619e5ced8be7c9bca4015",
+        "contextSnapshotTimestamp": {
+          "$date": "2026-11-15T20:48:29.790Z"
+        },
+        "epoch": 0,
+        "receiptId": "rcpt_787eecfb260740079135fa74927fdce0",
+        "policyBundleHash": "2cb4e659418721d3968f56cdb0814f74f0a98d15dbf2b00adb25e68cac532741",
+        "authorityBundleHash": "6e47f2418458ac324e01ee67548b514100e3091fabd7614c10be8e6b4b67271e",
+        "natureBundleHash": null,
+        "natureBundleRef": null,
+        "platformPolicyRef": {
+          "mode": "PACKAGE",
+          "version": "1.0.0",
+          "platformHash": "3ed743635f54ccb69ef9db9ed7a3e632da91d147da113439eea61440d5ea2370"
+        },
+        "resolutionConstant": "STRICT",
+        "eventType": "Entity_Onboarded",
+        "eventTimestamp": {
+          "$date": "2026-11-15T20:48:29.790Z"
+        },
+        "entryReason": "Entity onboarded by Platform_ComplianceOfficer — governed genesis event",
+        "regulatoryAuthority": {},
+        "custodyState": {
+          "legalCustodian": {
+            "entityType": "FFL",
+            "entityId": {
+              "$oid": "6afa1a9d2e98d85fe889ddf3"
+            }
+          },
+          "physicalCustodian": {
+            "entityType": "FFL",
+            "entityId": {
+              "$oid": "6afa1a9d2e98d85fe889ddf3"
+            }
+          }
+        },
+        "eventProvenance": "EXPLICIT",
+        "assertedBy": "HUMAN",
+        "isFinalAfterDisposition": false,
+        "actor": {
+          "actorInvariId": "PLT-3F4A2813",
+          "actorDisplayName": {
+            "pdRef": "pd_60094e0d-3821-49e5-bf5b-5d3df67fbd77",
+            "pdCommit": "bc4e35dc572e43d42163bcd2db119bf07377da898b18a346ea0d6c0b2d85b89f"
+          },
+          "actionRole": "Platform_ComplianceOfficer"
+        },
+        "actorType": "Human",
+        "complianceOutcome": {},
+        "policyExecutionTrace": [
+          {
+            "capability": "identity.platformActor",
+            "policyFile": "identity.platformActor",
+            "policyVersion": "1.3.0",
+            "policyHash": "7e8ba1ec71455606db1fdfd010fb3e19113095d3238429d56a948c0ced8f0c8d",
+            "phase": "validateBeforeWrite",
+            "result": "PASSED",
+            "reason": null
+          },
+          {
+            "capability": "lifecycle.entityOnboarding",
+            "policyFile": "lifecycle.entityOnboarding",
+            "policyVersion": "1.3.0",
+            "policyHash": "1444527b42071a4b1533dbaf14d7d83fef5020b864861999bb4119584777a011",
+            "phase": "validateBeforeWrite",
+            "result": "PASSED",
+            "reason": null
+          },
+          {
+            "capability": "lifecycle.entityOnboarding",
+            "policyFile": "lifecycle.entityOnboarding",
+            "policyVersion": "1.3.0",
+            "policyHash": "1444527b42071a4b1533dbaf14d7d83fef5020b864861999bb4119584777a011",
+            "phase": "normalizeEvent",
+            "result": "MODIFIED",
+            "executedAt": {
+              "$date": "2026-11-15T20:48:29.790Z"
+            },
+            "reason": "Entity type and onboarding timestamp derived into metadata."
+          }
+        ],
+        "evidenceRefs": [
+          {
+            "$oid": "6afa1a9d2e98d85fe889dd9e"
+          },
+          {
+            "$oid": "6afa1a9d2e98d85fe889ddb5"
+          },
+          {
+            "$oid": "6afa1a9d2e98d85fe889ddcd"
+          },
+          {
+            "$oid": "6afa1a9d2e98d85fe889dde8"
+          }
+        ],
+        "gateReads": {
+          "subjectType": "ONBOARDING_SUBMISSION",
+          "subjectId": "6afa1a9d2e98d85fe889dd8a",
+          "bundleRef": {
+            "bundleId": "entity_onboarding",
+            "version": "1.3.0",
+            "hash": "04b6c8fc36fc86ee7868a06d7dc10387a2fe692ab1bf1240bb4000dea4acaa72"
+          },
+          "chainHead": {
+            "chainSequence": 4,
+            "entryHash": "aae3fe2f2e140fc20cef0dfe66646b784ea77cda41b74d8e3eb3f4670577cd6f"
+          },
+          "gates": [
+            {
+              "nodeRef": "s2",
+              "recordId": {
+                "$oid": "6afa1a9d2e98d85fe889dd9e"
+              },
+              "chainSequence": 1,
+              "entryHash": "11328ef1da851919ad0051b8134806e3c70f4a8225811429228bb8e5e31312f9"
+            },
+            {
+              "nodeRef": "s2b",
+              "recordId": {
+                "$oid": "6afa1a9d2e98d85fe889ddb5"
+              },
+              "chainSequence": 2,
+              "entryHash": "e8c0192c21a4d9e2dda5bad4e209855534c4b0182befee391137595612d878b3"
+            },
+            {
+              "nodeRef": "s3",
+              "recordId": {
+                "$oid": "6afa1a9d2e98d85fe889ddcd"
+              },
+              "chainSequence": 3,
+              "entryHash": "6c440127eb20ef6750e5eb5cdcd622809bffceba684f0965f621f0ead48ee72f"
+            },
+            {
+              "nodeRef": "s5",
+              "recordId": {
+                "$oid": "6afa1a9d2e98d85fe889dde8"
+              },
+              "chainSequence": 4,
+              "entryHash": "aae3fe2f2e140fc20cef0dfe66646b784ea77cda41b74d8e3eb3f4670577cd6f"
+            }
+          ]
+        },
+        "metadata": {
+          "submission": {
+            "entityType": "FFL",
+            "legalName": "Mesa Example Arms (synthetic)",
+            "domain": "firearms",
+            "fflLicenseNumber": "9-86-999-01-8H-99999",
+            "licenseType": "01",
+            "issueDate": "2025-08-01",
+            "expirationDate": "2028-08-01",
+            "atfRegion": "Region 9",
+            "premises": {
+              "addressLine1": "100 Example Way",
+              "city": "Tempe",
+              "state": "AZ",
+              "zip": "85281"
+            },
+            "ownershipType": "LLC",
+            "termsAcceptedAt": "2026-11-15T20:00:00Z",
+            "termsVersion": "1.0.0",
+            "timeZone": "America/Phoenix",
+            "responsiblePersons": {
+              "pdRef": "pd_d39af2e4-ac27-4707-81f4-95c788a49bde",
+              "pdCommit": "390d1dd9f4b4cb761f449afbc45038da206228c4d55f3b0e52980908b981f3b7"
+            },
+            "responsiblePersonIds": [
+              "rp-1"
+            ]
+          },
+          "entityId": {
+            "$oid": "6afa1a9d2e98d85fe889ddf3"
+          },
+          "entityType": "FFL",
+          "coreBookInstanceId": {
+            "$oid": "6afa1a9d2e98d85fe889ddf5"
+          },
+          "natureBundleVersion": "1.3.0",
+          "onboardedAt": "2026-11-15T20:48:29.790Z"
+        }
+      },
+      {
+        "_id": {
+          "$oid": "6afa1a9d2e98d85fe889de10"
+        },
+        "assetId": "entity::6afa1a9d2e98d85fe889ddf3",
+        "coreBookInstanceId": {
+          "$oid": "6afa1a9d2e98d85fe889ddf5"
+        },
+        "tenantContext": {
+          "type": "FFL",
+          "tenantId": {
+            "$oid": "6afa1a9d2e98d85fe889ddf3"
+          }
+        },
+        "version": 2,
+        "previousEntryHash": "26d3f362dadd1dd48709dcc91efb69ffc69ce0f53249e3df3dfcf0b6a5bab959",
+        "entryHash": "daaaebcc6c742bbbe3f1e1161a3cb6e3811a373726da30ef69694f17bf5f2ca1",
+        "entrySignature": "TT5pYGqgzwIC/bi8eOdS2g9t0BpzfFkAOeobB1kUq/e7Yglt8DqwYLw0i3yI24kAUhB5ml9Gyt09Koqh4dT7BA==",
+        "signingKeyId": "k-2026-09",
+        "hashChainFormatVersion": 4,
+        "entryFormatVersion": 7,
+        "contextBundleHash": "57e9bc58c16fb5ef96196933676a1360356c7e44798619e5ced8be7c9bca4015",
+        "contextSnapshotTimestamp": {
+          "$date": "2026-11-15T20:48:29.834Z"
+        },
+        "epoch": 0,
+        "receiptId": "rcpt_6357c4f1f07a4f70aa55a6880612a174",
+        "policyBundleHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "authorityBundleHash": "ede1680c3c5d8fe6d7510008257d208f284770e9d825bf9102fe27aa39fda0de",
+        "natureBundleHash": null,
+        "natureBundleRef": null,
+        "platformPolicyRef": {
+          "mode": "PACKAGE",
+          "version": "1.0.0",
+          "platformHash": "3ed743635f54ccb69ef9db9ed7a3e632da91d147da113439eea61440d5ea2370"
+        },
+        "resolutionConstant": "STRICT",
+        "eventType": "CoreBookInstance_Initialized",
+        "eventTimestamp": {
+          "$date": "2026-11-15T20:48:29.834Z"
+        },
+        "entryReason": "CoreBookInstance created and initialized — governed ledger now active",
+        "regulatoryAuthority": {},
+        "custodyState": {
+          "legalCustodian": {
+            "entityType": "FFL",
+            "entityId": {
+              "$oid": "6afa1a9d2e98d85fe889ddf3"
+            }
+          },
+          "physicalCustodian": {
+            "entityType": "FFL",
+            "entityId": {
+              "$oid": "6afa1a9d2e98d85fe889ddf3"
+            }
+          }
+        },
+        "eventProvenance": "DERIVED",
+        "assertedBy": "SYSTEM",
+        "isFinalAfterDisposition": false,
+        "actor": {
+          "actorInvariId": "SYSTEM-0001",
+          "actorDisplayName": "System",
+          "actionRole": "System"
+        },
+        "actorType": "System",
+        "complianceOutcome": {},
+        "policyExecutionTrace": [],
+        "evidenceRefs": [],
+        "metadata": {
+          "coreBookInstanceId": {
+            "$oid": "6afa1a9d2e98d85fe889ddf5"
+          },
+          "domain": "firearms",
+          "policyProfile": {
+            "domain": "firearms",
+            "requiredCapabilities": [
+              "custody.chain",
+              "custody.delivery",
+              "identity.employee",
+              "lifecycle.correction",
+              "lifecycle.divergence",
+              "lifecycle.divergence.resolve",
+              "personnel.manage",
+              "identity.licenseHolder",
+              "lifecycle.firearmAcquisition",
+              "regulatory.atf",
+              "reporting.atf",
+              "lifecycle.bulkImport",
+              "lifecycle.chainExport"
+            ],
+            "optionalCapabilities": []
+          },
+          "initializedByInvariId": "PLT-3F4A2813"
+        }
+      },
+      {
+        "_id": {
+          "$oid": "6afa1a9d2e98d85fe889de31"
+        },
+        "assetId": "entity::6afa1a9d2e98d85fe889ddf3",
+        "coreBookInstanceId": {
+          "$oid": "6afa1a9d2e98d85fe889ddf5"
+        },
+        "tenantContext": {
+          "type": "FFL",
+          "tenantId": {
+            "$oid": "6afa1a9d2e98d85fe889ddf3"
+          }
+        },
+        "version": 3,
+        "previousEntryHash": "daaaebcc6c742bbbe3f1e1161a3cb6e3811a373726da30ef69694f17bf5f2ca1",
+        "entryHash": "63aeaf8a46d831463a105e39e947dc427f613defa0f2dddb13c3a3294403091f",
+        "entrySignature": "m6KZokcIQtkuFMlx11MUQlNP7333zqFkh2FVzZNQ2w9SqT0v01zVB8NJyJLQia8vagwuuAVOplVwIr453BnTCQ==",
+        "signingKeyId": "k-2026-09",
+        "hashChainFormatVersion": 4,
+        "entryFormatVersion": 7,
+        "contextBundleHash": "57e9bc58c16fb5ef96196933676a1360356c7e44798619e5ced8be7c9bca4015",
+        "contextSnapshotTimestamp": {
+          "$date": "2026-11-15T20:48:29.885Z"
+        },
+        "epoch": 0,
+        "receiptId": "rcpt_1c9bc7bf9d2d4b59b44762d8197b412b",
+        "policyBundleHash": "1ad1c47ddf20b4ae4f5ea4dba847c1e0d498983ac431ddd8644e7140e4aa6e28",
+        "authorityBundleHash": "eb1348dc85376fb8f0b973bf37b5f327f3735372ad25bf91c0a4f108f58e66b2",
+        "natureBundleHash": null,
+        "natureBundleRef": null,
+        "platformPolicyRef": {
+          "mode": "PACKAGE",
+          "version": "1.0.0",
+          "platformHash": "3ed743635f54ccb69ef9db9ed7a3e632da91d147da113439eea61440d5ea2370"
+        },
+        "resolutionConstant": "STRICT",
+        "eventType": "Employee_Onboarding_Authorized",
+        "eventTimestamp": {
+          "$date": "2026-11-15T20:48:29.885Z"
+        },
+        "entryReason": "Owner authorized by Platform_ComplianceOfficer — first employee of the entity",
+        "regulatoryAuthority": {},
+        "custodyState": {
+          "legalCustodian": {
+            "entityType": "FFL",
+            "entityId": {
+              "$oid": "6afa1a9d2e98d85fe889ddf3"
+            }
+          },
+          "physicalCustodian": {
+            "entityType": "FFL",
+            "entityId": {
+              "$oid": "6afa1a9d2e98d85fe889ddf3"
+            }
+          }
+        },
+        "eventProvenance": "EXPLICIT",
+        "assertedBy": "HUMAN",
+        "isFinalAfterDisposition": false,
+        "actor": {
+          "actorInvariId": "PLT-3F4A2813",
+          "actorDisplayName": {
+            "pdRef": "pd_f80f2f31-f8d6-4774-a200-9cc4e4f12df1",
+            "pdCommit": "a406bbe1f30f45b16ab3b5fa2b95eb1c885bc6b26cb35af95bd40b99c284bb13"
+          },
+          "actionRole": "Platform_ComplianceOfficer"
+        },
+        "actorType": "Human",
+        "complianceOutcome": {},
+        "policyExecutionTrace": [
+          {
+            "capability": "identity.employee",
+            "policyFile": "identity.employee",
+            "policyVersion": "2.0.0",
+            "policyHash": "9333928a60bd630c5d90c009fc5c3e7a69dcab8967f3ab5082399e514cb58828",
+            "phase": "validateBeforeWrite",
+            "result": "PASSED",
+            "reason": null
+          }
+        ],
+        "evidenceRefs": [],
+        "metadata": {
+          "isBootstrapOnboarding": true,
+          "targetEntityId": {
+            "$oid": "6afa1a9d2e98d85fe889ddf3"
+          },
+          "targetEntityType": "FFL",
+          "intendedEmail": {
+            "pdRef": "pd_a7ed8b70-2b9d-47e7-89c0-d0954b1a63f0",
+            "pdCommit": "3e708dc5ae52c1437899628632ddc867dcb2d13eb23c949a166fcb7086630326"
+          },
+          "intendedDisplayName": {
+            "pdRef": "pd_3c7f34cc-f414-41ab-a564-63aaf92a90c2",
+            "pdCommit": "1e7d9b40a2d1aa3a82123931c7f09602a857dad83f67fabfc439348e8d19fcf2"
+          },
+          "authorizedByInvariId": "PLT-3F4A2813",
+          "rootBinding": {
+            "slot": "responsible_person",
+            "bundleId": "b2b_transfer",
+            "bundleVersion": "2.1.0",
+            "roleSlotsHash": "bf369bfdda58168c0a419616e3ab51dc87551efe46adb44d557d0f769b086c07",
+            "responsiblePersonId": "rp-1",
+            "state": "ACTIVE"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$oid": "6afa1a9d2e98d85fe889de43"
+        },
+        "assetId": "entity::6afa1a9d2e98d85fe889ddf3",
+        "coreBookInstanceId": {
+          "$oid": "6afa1a9d2e98d85fe889ddf5"
+        },
+        "tenantContext": {
+          "type": "FFL",
+          "tenantId": {
+            "$oid": "6afa1a9d2e98d85fe889ddf3"
+          }
+        },
+        "version": 4,
+        "previousEntryHash": "63aeaf8a46d831463a105e39e947dc427f613defa0f2dddb13c3a3294403091f",
+        "entryHash": "0f54a0c81df32c79c946dc7eac327e047877e14801358c926a486f2dbec2a486",
+        "entrySignature": "669nfukGZjCssY2uIJe6n3lX8+1oXzbmrHxcaSavSj5lXWWW6h8vyo7VU/tTq6hMDG5zFxx5RTyRjIFRL4G1AQ==",
+        "signingKeyId": "k-2026-09",
+        "hashChainFormatVersion": 4,
+        "entryFormatVersion": 7,
+        "contextBundleHash": "57e9bc58c16fb5ef96196933676a1360356c7e44798619e5ced8be7c9bca4015",
+        "contextSnapshotTimestamp": {
+          "$date": "2026-11-15T20:48:29.905Z"
+        },
+        "epoch": 0,
+        "receiptId": "rcpt_a996d69010ca40bbb2355f56e639e45e",
+        "policyBundleHash": "1ad1c47ddf20b4ae4f5ea4dba847c1e0d498983ac431ddd8644e7140e4aa6e28",
+        "authorityBundleHash": "534351c0824be24e7df23ce346319ecd16070acabae51417bea37d6d394c736a",
+        "natureBundleHash": null,
+        "natureBundleRef": null,
+        "platformPolicyRef": {
+          "mode": "PACKAGE",
+          "version": "1.0.0",
+          "platformHash": "3ed743635f54ccb69ef9db9ed7a3e632da91d147da113439eea61440d5ea2370"
+        },
+        "resolutionConstant": "STRICT",
+        "eventType": "Employee_Onboarded",
+        "eventTimestamp": {
+          "$date": "2026-11-15T20:48:29.905Z"
+        },
+        "entryReason": "Owner account created following an authorized onboarding",
+        "regulatoryAuthority": {},
+        "custodyState": {
+          "legalCustodian": {
+            "entityType": "FFL",
+            "entityId": {
+              "$oid": "6afa1a9d2e98d85fe889ddf3"
+            }
+          },
+          "physicalCustodian": {
+            "entityType": "FFL",
+            "entityId": {
+              "$oid": "6afa1a9d2e98d85fe889ddf3"
+            }
+          }
+        },
+        "eventProvenance": "DERIVED",
+        "assertedBy": "SYSTEM",
+        "isFinalAfterDisposition": false,
+        "actor": {
+          "actorInvariId": "SYSTEM-0001",
+          "actorDisplayName": "System",
+          "actionRole": "System",
+          "authorityContext": {
+            "regulator": "ATF",
+            "entityType": "FFL"
+          }
+        },
+        "actorType": "System",
+        "complianceOutcome": {},
+        "policyExecutionTrace": [
+          {
+            "capability": "identity.employee",
+            "policyFile": "identity.employee",
+            "policyVersion": "2.0.0",
+            "policyHash": "9333928a60bd630c5d90c009fc5c3e7a69dcab8967f3ab5082399e514cb58828",
+            "phase": "validateBeforeWrite",
+            "result": "PASSED",
+            "reason": null
+          }
+        ],
+        "evidenceRefs": [],
+        "metadata": {
+          "isBootstrapOnboarding": true,
+          "inviteReceiptId": "rcpt_1c9bc7bf9d2d4b59b44762d8197b412b",
+          "onboardedInvariId": "INV-97F75B83",
+          "onboardedDisplayName": {
+            "pdRef": "pd_63490f7b-d750-4a8d-a616-e219a516b7e8",
+            "pdCommit": "6c913a5327dfaaa4f0cf44689a14705c9b49edf7b7cd0b9aa2175d3d6bad68ba"
+          },
+          "onboardedEmail": {
+            "pdRef": "pd_c8220be4-de91-46ea-afd1-09c0a1c3ced4",
+            "pdCommit": "fb394708531cc4af5c5e6964143cafad12c5dcf1d698e94b87dafa773282cfc2"
+          },
+          "authorizedByInvariId": "PLT-3F4A2813"
+        }
+      },
+      {
+        "_id": {
+          "$oid": "6afa1a9e2e98d85fe889de6c"
+        },
+        "assetId": "entity::6afa1a9d2e98d85fe889ddf3",
+        "coreBookInstanceId": {
+          "$oid": "6afa1a9d2e98d85fe889ddf5"
+        },
+        "tenantContext": {
+          "type": "FFL",
+          "tenantId": {
+            "$oid": "6afa1a9d2e98d85fe889ddf3"
+          }
+        },
+        "version": 5,
+        "previousEntryHash": "0f54a0c81df32c79c946dc7eac327e047877e14801358c926a486f2dbec2a486",
+        "entryHash": "92a884de4979bcebc81b16a1d31bd9f3a06ebf60011a44625026f1f9f82e01aa",
+        "entrySignature": "06IV39O8L+3xbLbZCE7AnlIy2cCK3CfHl3SqVU81/gKimsqQNUhFYiblqa9f+lxxrDb8ncU7ioOX8c8ydoU+CA==",
+        "signingKeyId": "k-2026-09",
+        "hashChainFormatVersion": 4,
+        "entryFormatVersion": 7,
+        "contextBundleHash": "57e9bc58c16fb5ef96196933676a1360356c7e44798619e5ced8be7c9bca4015",
+        "contextSnapshotTimestamp": {
+          "$date": "2026-11-15T20:48:29.997Z"
+        },
+        "epoch": 0,
+        "receiptId": "rcpt_008b7a619cf2474a9acefaf6e0366186",
+        "policyBundleHash": "c42242b806f3ff2ec26079c15907ea829eef9c111052eb743bcc1cd1690577cc",
+        "authorityBundleHash": "9c51219c1d7ddb71afa9c51c224edd0db9a33e8f420cd9c8e1b1f26bf8f84778",
+        "natureBundleHash": null,
+        "natureBundleRef": null,
+        "platformPolicyRef": {
+          "mode": "PACKAGE",
+          "version": "1.0.0",
+          "platformHash": "3ed743635f54ccb69ef9db9ed7a3e632da91d147da113439eea61440d5ea2370"
+        },
+        "resolutionConstant": "STRICT",
+        "eventType": "Authority_Admitted",
+        "eventTimestamp": {
+          "$date": "2026-11-15T20:48:29.997Z"
+        },
+        "entryReason": "Authority 1.0.0 admitted as ROOT_HOLDER",
+        "regulatoryAuthority": {},
+        "custodyState": {
+          "legalCustodian": {
+            "entityType": "FFL",
+            "entityId": {
+              "$oid": "6afa1a9d2e98d85fe889ddf3"
+            }
+          },
+          "physicalCustodian": {
+            "entityType": "FFL",
+            "entityId": {
+              "$oid": "6afa1a9d2e98d85fe889ddf3"
+            }
+          }
+        },
+        "eventProvenance": "EXPLICIT",
+        "assertedBy": "HUMAN",
+        "isFinalAfterDisposition": false,
+        "actor": {
+          "actorInvariId": "INV-97F75B83",
+          "actorDisplayName": {
+            "pdRef": "pd_db52edbc-f953-49e5-9be4-6ebd7f61f0d3",
+            "pdCommit": "9eecd0c37ec637c5fcdc83545eda3e3d9cbf5313b9860e81ae1a82cfe0784df8"
+          },
+          "actionRole": "Entity_Employee"
+        },
+        "actorType": "Human",
+        "complianceOutcome": {},
+        "policyExecutionTrace": [
+          {
+            "capability": "lifecycle.authorityAdmission",
+            "policyFile": "lifecycle.authorityAdmission",
+            "policyVersion": "1.0.0",
+            "policyHash": "9bd95460742bffccbacbaa4aaa1090b8ded11208ed360deb7d9a6bdc962d7eb8",
+            "phase": "validateBeforeWrite",
+            "result": "PASSED",
+            "reason": null
+          }
+        ],
+        "evidenceRefs": [
+          {
+            "$oid": "6afa1a9d2e98d85fe889de5d"
+          },
+          {
+            "$oid": "6afa1a9d2e98d85fe889de60"
+          }
+        ],
+        "authorityRef": {
+          "basis": "AUTHORITY_ADMISSION",
+          "entityId": "6afa1a9d2e98d85fe889ddf3",
+          "version": null,
+          "authorityHash": null,
+          "binding": null
+        },
+        "metadata": {
+          "authorityAdmission": {
+            "entityId": "6afa1a9d2e98d85fe889ddf3",
+            "version": "1.0.0",
+            "authorityHash": "3b7609a72d44710e1c1d0605a77921032052e1157be3cde277104d7907d94b8c",
+            "package": {
+              "format": "invari.authority.v1",
+              "entityId": "6afa1a9d2e98d85fe889ddf3",
+              "version": "1.0.0",
+              "capability": {
+                "bundleId": "b2b_transfer",
+                "version": "2.1.0",
+                "natureBundleHash": "67cf346ccdb1ab4d05543edd0ecb9a57d87b04ad1190678f6e95451a8832bd53",
+                "roleSlotsHash": "bf369bfdda58168c0a419616e3ab51dc87551efe46adb44d557d0f769b086c07"
+              },
+              "facts": {
+                "genesisAssetId": "entity::6afa1a9d2e98d85fe889ddf3",
+                "genesisEntryHash": "26d3f362dadd1dd48709dcc91efb69ffc69ce0f53249e3df3dfcf0b6a5bab959"
+              },
+              "platformRulesVersion": "0.4.0",
+              "jobTitles": [
+                {
+                  "id": "licensee_e2",
+                  "label": "Firearm Acquired By FFL",
+                  "slot": "licensee",
+                  "events": [
+                    "Firearm_Acquired_By_FFL"
+                  ],
+                  "mayBindRoles": false,
+                  "platformPowers": []
+                },
+                {
+                  "id": "licensee_e2_b",
+                  "label": "Firearm Acquired By FFL (may hire)",
+                  "slot": "licensee",
+                  "events": [
+                    "Firearm_Acquired_By_FFL"
+                  ],
+                  "mayBindRoles": true,
+                  "platformPowers": [
+                    "personnel.manage"
+                  ]
+                }
+              ],
+              "bindings": [
+                {
+                  "invariId": "INV-97F75B83",
+                  "root": {
+                    "responsiblePersonId": "rp-1",
+                    "authorizedEntryHash": "63aeaf8a46d831463a105e39e947dc427f613defa0f2dddb13c3a3294403091f"
+                  },
+                  "state": "ACTIVE"
+                }
+              ],
+              "houseRules": [],
+              "aliases": {
+                "slots": {},
+                "events": {}
+              }
+            },
+            "previous": null,
+            "recordId": "6afa1a9d2e98d85fe889de5d",
+            "glyph": {
+              "recordId": "6afa1a9d2e98d85fe889de60",
+              "recordHash": "06f54baea05c98b0ce626bb73da54bd50efe314d9aac5a3b97fb6a07ac370864",
+              "chainSequence": 1
+            },
+            "signerInvariId": "INV-97F75B83",
+            "capacity": "ROOT_HOLDER",
+            "admissionRules": "1.0.0",
+            "platformRulesVersion": "0.4.0",
+            "activeRootHolders": 1,
+            "warnings": [
+              "LAST_ROOT_HOLDER"
+            ]
+          }
+        }
+      },
+      {
+        "_id": {
+          "$oid": "6afa1a9ebce8c223fac1903d"
+        },
+        "assetId": "entity::6afa1a9d2e98d85fe889ddf3",
+        "coreBookInstanceId": {
+          "$oid": "6afa1a9d2e98d85fe889ddf5"
+        },
+        "tenantContext": {
+          "type": "FFL",
+          "tenantId": {
+            "$oid": "6afa1a9d2e98d85fe889ddf3"
+          }
+        },
+        "version": 6,
+        "previousEntryHash": "92a884de4979bcebc81b16a1d31bd9f3a06ebf60011a44625026f1f9f82e01aa",
+        "entryHash": "d027b21bd6c7519e0b01a83e9e9abbff7179a1e4210280c17aaba06f8e75372b",
+        "entrySignature": "itNV/BBz9+zqBAVh7Vdqp7oz1F7oo1s17nmEu3vNNkqz/H5uGOBqSaP+v54J35xJ97s8zf0LsP1KZ2C9qDR9AA==",
+        "signingKeyId": "k-2026-09",
+        "hashChainFormatVersion": 4,
+        "entryFormatVersion": 7,
+        "contextBundleHash": "57e9bc58c16fb5ef96196933676a1360356c7e44798619e5ced8be7c9bca4015",
+        "contextSnapshotTimestamp": {
+          "$date": "2026-11-15T20:48:30.443Z"
+        },
+        "epoch": 0,
+        "receiptId": "rcpt_0295562ac3dd4bcb93c48b98c8d34c65",
+        "policyBundleHash": "c42242b806f3ff2ec26079c15907ea829eef9c111052eb743bcc1cd1690577cc",
+        "authorityBundleHash": "ce88d69ac35283cfc521a4bb4d32c55ffcbe17ef364bdbcbb5a06299589eb6de",
+        "natureBundleHash": null,
+        "natureBundleRef": null,
+        "platformPolicyRef": {
+          "mode": "PACKAGE",
+          "version": "1.0.0",
+          "platformHash": "3ed743635f54ccb69ef9db9ed7a3e632da91d147da113439eea61440d5ea2370"
+        },
+        "resolutionConstant": "STRICT",
+        "eventType": "Authority_Admitted",
+        "eventTimestamp": {
+          "$date": "2026-11-15T20:48:30.443Z"
+        },
+        "entryReason": "Authority 1.1.0 admitted as ROOT_HOLDER",
+        "regulatoryAuthority": {},
+        "custodyState": {
+          "legalCustodian": {
+            "entityType": "FFL",
+            "entityId": {
+              "$oid": "6afa1a9d2e98d85fe889ddf3"
+            }
+          },
+          "physicalCustodian": {
+            "entityType": "FFL",
+            "entityId": {
+              "$oid": "6afa1a9d2e98d85fe889ddf3"
+            }
+          }
+        },
+        "eventProvenance": "EXPLICIT",
+        "assertedBy": "HUMAN",
+        "isFinalAfterDisposition": false,
+        "actor": {
+          "actorInvariId": "INV-97F75B83",
+          "actorDisplayName": {
+            "pdRef": "pd_95497b38-3420-4bb2-8348-54629118e0aa",
+            "pdCommit": "bb57b7b9ad3c9da0b9b5be32df8535efbcd40e6613e8803f2ef5bd39a8014561"
+          },
+          "actionRole": "Entity_Employee"
+        },
+        "actorType": "Human",
+        "complianceOutcome": {},
+        "policyExecutionTrace": [
+          {
+            "capability": "lifecycle.authorityAdmission",
+            "policyFile": "lifecycle.authorityAdmission",
+            "policyVersion": "1.0.0",
+            "policyHash": "9bd95460742bffccbacbaa4aaa1090b8ded11208ed360deb7d9a6bdc962d7eb8",
+            "phase": "validateBeforeWrite",
+            "result": "PASSED",
+            "reason": null
+          }
+        ],
+        "evidenceRefs": [
+          {
+            "$oid": "6afa1a9ebce8c223fac19022"
+          },
+          {
+            "$oid": "6afa1a9ebce8c223fac19028"
+          }
+        ],
+        "authorityRef": {
+          "basis": "AUTHORITY_ADMISSION",
+          "entityId": "6afa1a9d2e98d85fe889ddf3",
+          "version": null,
+          "authorityHash": null,
+          "binding": null
+        },
+        "metadata": {
+          "authorityAdmission": {
+            "entityId": "6afa1a9d2e98d85fe889ddf3",
+            "version": "1.1.0",
+            "authorityHash": "4886cb32ade46a72dadb9456d8d3228692a07d7c3c27a51b14820a33421a2c25",
+            "package": {
+              "format": "invari.authority.v1",
+              "entityId": "6afa1a9d2e98d85fe889ddf3",
+              "version": "1.1.0",
+              "capability": {
+                "bundleId": "b2b_transfer",
+                "version": "2.1.0",
+                "natureBundleHash": "67cf346ccdb1ab4d05543edd0ecb9a57d87b04ad1190678f6e95451a8832bd53",
+                "roleSlotsHash": "bf369bfdda58168c0a419616e3ab51dc87551efe46adb44d557d0f769b086c07"
+              },
+              "facts": {
+                "genesisAssetId": "entity::6afa1a9d2e98d85fe889ddf3",
+                "genesisEntryHash": "26d3f362dadd1dd48709dcc91efb69ffc69ce0f53249e3df3dfcf0b6a5bab959"
+              },
+              "platformRulesVersion": "0.4.0",
+              "jobTitles": [
+                {
+                  "id": "licensee_e2",
+                  "label": "Receiving clerk",
+                  "slot": "licensee",
+                  "events": [
+                    "Firearm_Manufactured",
+                    "Firearm_Acquired_By_FFL"
+                  ],
+                  "mayBindRoles": false,
+                  "platformPowers": []
+                },
+                {
+                  "id": "licensee_e2_b",
+                  "label": "Store manager",
+                  "slot": "licensee",
+                  "events": [
+                    "Firearm_Acquired_By_FFL"
+                  ],
+                  "mayBindRoles": true,
+                  "platformPowers": [
+                    "personnel.manage"
+                  ]
+                }
+              ],
+              "bindings": [
+                {
+                  "invariId": "INV-97F75B83",
+                  "root": {
+                    "responsiblePersonId": "rp-1",
+                    "authorizedEntryHash": "63aeaf8a46d831463a105e39e947dc427f613defa0f2dddb13c3a3294403091f"
+                  },
+                  "state": "ACTIVE"
+                }
+              ],
+              "houseRules": [],
+              "aliases": {
+                "slots": {},
+                "events": {}
+              }
+            },
+            "previous": {
+              "version": "1.0.0",
+              "authorityHash": "3b7609a72d44710e1c1d0605a77921032052e1157be3cde277104d7907d94b8c"
+            },
+            "recordId": "6afa1a9ebce8c223fac19022",
+            "glyph": {
+              "recordId": "6afa1a9ebce8c223fac19028",
+              "recordHash": "4cc1c7d13987d81d67a2e58f149499339b017facf83b33747b50e9c1a76c2097",
+              "chainSequence": 2
+            },
+            "signerInvariId": "INV-97F75B83",
+            "capacity": "ROOT_HOLDER",
+            "admissionRules": "1.0.0",
+            "platformRulesVersion": "0.4.0",
+            "activeRootHolders": 1,
+            "warnings": [
+              "LAST_ROOT_HOLDER"
+            ]
+          }
+        }
+      },
+      {
+        "_id": {
+          "$oid": "6afa1a9ebce8c223fac19078"
+        },
+        "assetId": "entity::6afa1a9d2e98d85fe889ddf3",
+        "coreBookInstanceId": {
+          "$oid": "6afa1a9d2e98d85fe889ddf5"
+        },
+        "tenantContext": {
+          "type": "FFL",
+          "tenantId": {
+            "$oid": "6afa1a9d2e98d85fe889ddf3"
+          }
+        },
+        "version": 7,
+        "previousEntryHash": "d027b21bd6c7519e0b01a83e9e9abbff7179a1e4210280c17aaba06f8e75372b",
+        "entryHash": "f61d0e444c3e058428adf2d603e4799f3c275f2884826419793df6c630d9d630",
+        "entrySignature": "4Lc2SZOwwAVZw8Ij8V5/SrICpSviD1jKBhikxrmBdFw8HIU8Ru2ecfuP830jYV8+c4ZknpPhG7tUFUKriMZCAw==",
+        "signingKeyId": "k-2026-09",
+        "hashChainFormatVersion": 4,
+        "entryFormatVersion": 7,
+        "contextBundleHash": "57e9bc58c16fb5ef96196933676a1360356c7e44798619e5ced8be7c9bca4015",
+        "contextSnapshotTimestamp": {
+          "$date": "2026-11-15T20:48:30.551Z"
+        },
+        "epoch": 0,
+        "receiptId": "rcpt_da94a97b847144d68fc21d5bdfe6aa71",
+        "policyBundleHash": "1ad1c47ddf20b4ae4f5ea4dba847c1e0d498983ac431ddd8644e7140e4aa6e28",
+        "authorityBundleHash": "5557689461be47c2e56d069c7c5c2a5d007c592266a67f05e9e5190bc8442596",
+        "natureBundleHash": null,
+        "natureBundleRef": null,
+        "platformPolicyRef": {
+          "mode": "PACKAGE",
+          "version": "1.0.0",
+          "platformHash": "3ed743635f54ccb69ef9db9ed7a3e632da91d147da113439eea61440d5ea2370"
+        },
+        "resolutionConstant": "STRICT",
+        "eventType": "Employee_Onboarding_Authorized",
+        "eventTimestamp": {
+          "$date": "2026-11-15T20:48:30.551Z"
+        },
+        "entryReason": "Employee_Onboarding_Authorized asserted by a person; no reason recorded",
+        "regulatoryAuthority": {
+          "authorityType": "ATF",
+          "licenseNumber": "9-86-999-01-8H-99999",
+          "entityName": "Mesa Example Arms (synthetic)",
+          "role": "FFL"
+        },
+        "custodyState": {
+          "legalCustodian": {
+            "entityType": "FFL",
+            "entityId": {
+              "$oid": "6afa1a9d2e98d85fe889ddf3"
+            }
+          },
+          "physicalCustodian": {
+            "entityType": "FFL",
+            "entityId": {
+              "$oid": "6afa1a9d2e98d85fe889ddf3"
+            }
+          }
+        },
+        "eventProvenance": "EXPLICIT",
+        "assertedBy": "HUMAN",
+        "isFinalAfterDisposition": false,
+        "actor": {
+          "actorInvariId": "INV-97F75B83",
+          "actorDisplayName": {
+            "pdRef": "pd_58c2584c-75fd-427a-a788-6e8b5a1e0bd0",
+            "pdCommit": "611cb01f0c0092d202073e8c792656ce7ec50a5e327f7d28f1c16244c7a2b756"
+          },
+          "actionRole": "Entity_Employee",
+          "authorityContext": {
+            "regulator": "ATF",
+            "entityType": "FFL"
+          }
+        },
+        "actorType": "Human",
+        "complianceOutcome": {},
+        "policyExecutionTrace": [
+          {
+            "capability": "identity.employee",
+            "policyFile": "identity.employee",
+            "policyVersion": "2.0.0",
+            "policyHash": "9333928a60bd630c5d90c009fc5c3e7a69dcab8967f3ab5082399e514cb58828",
+            "phase": "validateBeforeWrite",
+            "result": "PASSED",
+            "reason": null
+          }
+        ],
+        "evidenceRefs": [],
+        "authorityRef": {
+          "basis": "AUTHORITY_PACKAGE",
+          "entityId": "6afa1a9d2e98d85fe889ddf3",
+          "version": "1.1.0",
+          "authorityHash": "4886cb32ade46a72dadb9456d8d3228692a07d7c3c27a51b14820a33421a2c25",
+          "binding": {
+            "kind": "ROOT",
+            "slot": "responsible_person",
+            "jobTitle": null
+          },
+          "platformRulesVersion": "0.4.0"
+        },
+        "metadata": {
+          "targetEntityId": {
+            "$oid": "6afa1a9d2e98d85fe889ddf3"
+          },
+          "targetEntityType": "FFL",
+          "intendedEmail": {
+            "pdRef": "pd_33db877b-8ffa-42de-b334-a8a8de03ea45",
+            "pdCommit": "00f4d2d09fdc97ba25ebbff360bb23992c4efc5c6fbe2dfb730b9dd73d93bb27"
+          },
+          "intendedDisplayName": {
+            "pdRef": "pd_98f9c34d-4b84-46de-a29a-812c3544605d",
+            "pdCommit": "5d25ee08fc5c1bb833b952b37727abf7b06c4cd218f26ff8b72f940ea66e4de6"
+          },
+          "intendedJobTitle": "licensee_e2"
+        }
+      },
+      {
+        "assetId": "entity::6afa1a9d2e98d85fe889ddf3",
+        "coreBookInstanceId": {
+          "$oid": "6afa1a9d2e98d85fe889ddf5"
+        },
+        "tenantContext": {
+          "type": "FFL",
+          "tenantId": {
+            "$oid": "6afa1a9d2e98d85fe889ddf3"
+          }
+        },
+        "version": 8,
+        "previousEntryHash": "f61d0e444c3e058428adf2d603e4799f3c275f2884826419793df6c630d9d630",
+        "entryHash": "aa9535794803455f100b3f8afc3a2306e0af113c1c7fa4c87653dbf53e262158",
+        "entrySignature": "6ZkrzVhfPObMwOWPKqVQNjOt5oMEYRjxWZrkA57zVblOT18T83fgEK9iftYsO9dQtQVqNl5BOh4Pwt9iVaNYCg==",
+        "signingKeyId": "k-2026-09",
+        "hashChainFormatVersion": 4,
+        "entryFormatVersion": 7,
+        "contextBundleHash": "57e9bc58c16fb5ef96196933676a1360356c7e44798619e5ced8be7c9bca4015",
+        "contextSnapshotTimestamp": {
+          "$date": "2026-11-15T20:48:30.666Z"
+        },
+        "epoch": 0,
+        "receiptId": "rcpt_0905424bb5c44c28b70c3ec1427f77b4",
+        "policyBundleHash": "8b75aa9a9d7e7b7c13156dd46e182fa1a5407a5cdd0ae069b6b805d098434d23",
+        "authorityBundleHash": "5a80259fbcf69c0242e1e30939a5619619980fff7595f7888759ff92da510c2d",
+        "natureBundleHash": null,
+        "natureBundleRef": null,
+        "platformPolicyRef": {
+          "mode": "PACKAGE",
+          "version": "1.0.0",
+          "platformHash": "3ed743635f54ccb69ef9db9ed7a3e632da91d147da113439eea61440d5ea2370"
+        },
+        "resolutionConstant": "STRICT",
+        "eventType": "Chain_Export_Completed",
+        "eventTimestamp": {
+          "$date": "2026-11-15T20:48:30.666Z"
+        },
+        "entryReason": "Chain export (FREE — first export in window) — INV-97F75B83",
+        "regulatoryAuthority": {},
+        "custodyState": {
+          "legalCustodian": {
+            "entityType": "FFL",
+            "entityId": {
+              "$oid": "6afa1a9d2e98d85fe889ddf3"
+            }
+          },
+          "physicalCustodian": {
+            "entityType": "FFL",
+            "entityId": {
+              "$oid": "6afa1a9d2e98d85fe889ddf3"
+            }
+          }
+        },
+        "eventProvenance": "EXPLICIT",
+        "assertedBy": "HUMAN",
+        "isFinalAfterDisposition": false,
+        "actor": {
+          "actorInvariId": "INV-97F75B83",
+          "actorDisplayName": {
+            "pdRef": "pd_0c8cfc99-fa84-4d7e-8b5a-d555b270d247",
+            "pdCommit": "a4c143bf25d7630174a0ea2e45cd40f9f0d949fe3f2c7d9ca1b806c132442fe4"
+          },
+          "actionRole": "Entity_Employee"
+        },
+        "actorType": "Human",
+        "complianceOutcome": {},
+        "policyExecutionTrace": [
+          {
+            "capability": "lifecycle.chainExport",
+            "policyFile": "lifecycle.chainExport",
+            "policyVersion": "2.4.0",
+            "policyHash": "2c7461aa65d716436ba61e1bc0bb564cdae6c876532d94ae868bebfcf74db3ee",
+            "phase": "validateBeforeWrite",
+            "result": "PASSED",
+            "reason": null,
+            "ledgerReads": [
+              {
+                "kind": "chain",
+                "assetId": "entity::6afa1a9d2e98d85fe889ddf3",
+                "entries": 7,
+                "headVersion": 7
+              }
+            ]
+          }
+        ],
+        "evidenceRefs": [],
+        "authorityRef": {
+          "basis": "AUTHORITY_PACKAGE",
+          "entityId": "6afa1a9d2e98d85fe889ddf3",
+          "version": "1.1.0",
+          "authorityHash": "4886cb32ade46a72dadb9456d8d3228692a07d7c3c27a51b14820a33421a2c25",
+          "binding": {
+            "kind": "ROOT",
+            "slot": "responsible_person",
+            "jobTitle": null
+          },
+          "platformRulesVersion": "0.4.0",
+          "power": {
+            "id": "lifecycle.chainExport",
+            "rulesVersion": "0.4.0"
+          }
+        },
+        "metadata": {
+          "rootHash": "8a0d4f076c09082c628b4d22d4f27a9ff187a310996fd576d227818281eba7c5",
+          "chainLength": 7,
+          "affirmationArtifactsCount": 4,
+          "exportPath": "FREE",
+          "exportPrice": null,
+          "paidExportCount": null,
+          "entityId": {
+            "$oid": "6afa1a9d2e98d85fe889ddf3"
+          },
+          "entityType": "FFL",
+          "rateLimitExempt": false,
+          "subjectType": "entity",
+          "subjectId": "6afa1a9d2e98d85fe889ddf3",
+          "subjectEntityId": "6afa1a9d2e98d85fe889ddf3",
+          "evidenceRef": null,
+          "subpoenaStatus": null,
+          "exportedByInvariId": "INV-97F75B83",
+          "exportedByRole": "Entity_Employee",
+          "writtenToChain": "entity::6afa1a9d2e98d85fe889ddf3",
+          "exportPolicyVersion": "lifecycle.chainExport@2.4.0"
+        },
+        "_id": {
+          "$oid": "6afa1a9ebce8c223fac190b5"
+        }
+      }
+    ]
+  },
+  "affirmationArtifacts": {
+    "rootHash": "7d1dd79ecb6d6cb685dcf986996e2f1560c6c911d12d3390501aadfba369e745",
+    "recordCount": 4,
+    "records": [
+      {
+        "_id": {
+          "$oid": "6afa1a9d2e98d85fe889dd9e"
+        },
+        "assetId": "6afa1a9d2e98d85fe889dd8a",
+        "subjectType": "ONBOARDING_SUBMISSION",
+        "chainSequence": 1,
+        "previousRecordHash": null,
+        "nodeRef": "s2",
+        "natureBundleHash": "04b6c8fc36fc86ee7868a06d7dc10387a2fe692ab1bf1240bb4000dea4acaa72",
+        "natureBundleRef": {
+          "bundleId": "entity_onboarding",
+          "version": "1.3.0",
+          "hash": "04b6c8fc36fc86ee7868a06d7dc10387a2fe692ab1bf1240bb4000dea4acaa72"
+        },
+        "prompt": "Have you verified that the submitted license number exists in regulatory records, is currently active (not expired, revoked, or suspended), and matches the submitted legal name and premises address?",
+        "response": "AFFIRM",
+        "actor": {
+          "actorId": {
+            "$oid": "6afa1a9b153961cc0bfb3620"
+          },
+          "invariId": "PLT-3F4A2813",
+          "actionRole": "Platform_ComplianceOfficer",
+          "authorityContext": null
+        },
+        "evidenceRefs": [
+          "ATF_EZ_CHECK",
+          "LICENSE_COPY"
+        ],
+        "sessionContext": "9273262b8e864ab4dfd183df7dfdbb65362e0d67955255fa",
+        "sealFormatVersion": 3,
+        "signingKeyId": "k-2026-09",
+        "createdAt": {
+          "$date": "2026-11-15T20:48:29.587Z"
+        },
+        "isImmutable": true,
+        "coreBookInstanceId": {
+          "$oid": "6afa1a9b153961cc0bfb361d"
+        },
+        "orderId": null,
+        "form4473Id": null,
+        "nicsCheckId": null,
+        "entryHash": "11328ef1da851919ad0051b8134806e3c70f4a8225811429228bb8e5e31312f9",
+        "entrySignature": "ubqwIoZaVeH54WY3J4rlxPeItqBF+VdYwbx3N7BO5r2/Rj3JIzPjYkSHNZp82KM2HeeNoGi+1u7dv4rDAbuyDw=="
+      },
+      {
+        "_id": {
+          "$oid": "6afa1a9d2e98d85fe889ddb5"
+        },
+        "assetId": "6afa1a9d2e98d85fe889dd8a",
+        "subjectType": "ONBOARDING_SUBMISSION",
+        "chainSequence": 2,
+        "previousRecordHash": "11328ef1da851919ad0051b8134806e3c70f4a8225811429228bb8e5e31312f9",
+        "nodeRef": "s2b",
+        "natureBundleHash": "04b6c8fc36fc86ee7868a06d7dc10387a2fe692ab1bf1240bb4000dea4acaa72",
+        "natureBundleRef": {
+          "bundleId": "entity_onboarding",
+          "version": "1.3.0",
+          "hash": "04b6c8fc36fc86ee7868a06d7dc10387a2fe692ab1bf1240bb4000dea4acaa72"
+        },
+        "prompt": "Have you verified that each person listed as a responsible person is named as a responsible person of this licensee in ATF records (the licence application or ATF's response), and that no responsible person named there is missing from the list?",
+        "response": "AFFIRM",
+        "actor": {
+          "actorId": {
+            "$oid": "6afa1a9b153961cc0bfb3620"
+          },
+          "invariId": "PLT-3F4A2813",
+          "actionRole": "Platform_ComplianceOfficer",
+          "authorityContext": null
+        },
+        "evidenceRefs": [
+          "RESPONSIBLE_PERSON_ID"
+        ],
+        "sessionContext": "16743d6509b6b6431903462c08079517b7e917b26d3099dc",
+        "sealFormatVersion": 3,
+        "signingKeyId": "k-2026-09",
+        "createdAt": {
+          "$date": "2026-11-15T20:48:29.652Z"
+        },
+        "isImmutable": true,
+        "coreBookInstanceId": {
+          "$oid": "6afa1a9b153961cc0bfb361d"
+        },
+        "orderId": null,
+        "form4473Id": null,
+        "nicsCheckId": null,
+        "entryHash": "e8c0192c21a4d9e2dda5bad4e209855534c4b0182befee391137595612d878b3",
+        "entrySignature": "etICyqb8uK2wIiOqhW9U02n52RoRpWW5axpTSL3K8MyRbul+KDrdlzscvjCx5I08AP5dwv9KVmeV2wgcVh0ADg=="
+      },
+      {
+        "_id": {
+          "$oid": "6afa1a9d2e98d85fe889ddcd"
+        },
+        "assetId": "6afa1a9d2e98d85fe889dd8a",
+        "subjectType": "ONBOARDING_SUBMISSION",
+        "chainSequence": 3,
+        "previousRecordHash": "e8c0192c21a4d9e2dda5bad4e209855534c4b0182befee391137595612d878b3",
+        "nodeRef": "s3",
+        "natureBundleHash": "04b6c8fc36fc86ee7868a06d7dc10387a2fe692ab1bf1240bb4000dea4acaa72",
+        "natureBundleRef": {
+          "bundleId": "entity_onboarding",
+          "version": "1.3.0",
+          "hash": "04b6c8fc36fc86ee7868a06d7dc10387a2fe692ab1bf1240bb4000dea4acaa72"
+        },
+        "prompt": "Based on your review of the submitted entity information, license verification, and any supporting documentation: does this entity appear to be a legitimate regulated operator with no indicators of bad-faith registration, straw purchasing, or trafficking activity?",
+        "response": "AFFIRM",
+        "actor": {
+          "actorId": {
+            "$oid": "6afa1a9b153961cc0bfb3620"
+          },
+          "invariId": "PLT-3F4A2813",
+          "actionRole": "Platform_ComplianceOfficer",
+          "authorityContext": null
+        },
+        "evidenceRefs": [
+          "STATE_BUSINESS_REGISTRY",
+          "PREMISES_DOCUMENT"
+        ],
+        "sessionContext": "1eb4ccb7cc472313bbd63aabde6a07bbfadcd09e34441c0b",
+        "sealFormatVersion": 3,
+        "signingKeyId": "k-2026-09",
+        "createdAt": {
+          "$date": "2026-11-15T20:48:29.703Z"
+        },
+        "isImmutable": true,
+        "coreBookInstanceId": {
+          "$oid": "6afa1a9b153961cc0bfb361d"
+        },
+        "orderId": null,
+        "form4473Id": null,
+        "nicsCheckId": null,
+        "entryHash": "6c440127eb20ef6750e5eb5cdcd622809bffceba684f0965f621f0ead48ee72f",
+        "entrySignature": "5C97c+mJAJrNI24R5S9u539GMUpT1Ee34iQB3hMD1pU4YYwhtMDJcXccU7OAty3UXF8sw0U7PfpZwa66BRKPDQ=="
+      },
+      {
+        "_id": {
+          "$oid": "6afa1a9d2e98d85fe889dde8"
+        },
+        "assetId": "6afa1a9d2e98d85fe889dd8a",
+        "subjectType": "ONBOARDING_SUBMISSION",
+        "chainSequence": 4,
+        "previousRecordHash": "6c440127eb20ef6750e5eb5cdcd622809bffceba684f0965f621f0ead48ee72f",
+        "nodeRef": "s5",
+        "natureBundleHash": "04b6c8fc36fc86ee7868a06d7dc10387a2fe692ab1bf1240bb4000dea4acaa72",
+        "natureBundleRef": {
+          "bundleId": "entity_onboarding",
+          "version": "1.3.0",
+          "hash": "04b6c8fc36fc86ee7868a06d7dc10387a2fe692ab1bf1240bb4000dea4acaa72"
+        },
+        "prompt": "Do you authorize this entity to be onboarded onto the Invari platform? By affirming, you attest that you have reviewed the entity identity, verified the license, and assessed legitimacy — and that you are satisfied this entity should receive access to a production governed compliance ledger.",
+        "response": "AFFIRM",
+        "actor": {
+          "actorId": {
+            "$oid": "6afa1a9b153961cc0bfb3620"
+          },
+          "invariId": "PLT-3F4A2813",
+          "actionRole": "Platform_ComplianceOfficer",
+          "authorityContext": null
+        },
+        "evidenceRefs": [
+          "SIGNED_TERMS"
+        ],
+        "sessionContext": "0a9bfdcf300061041a69c73aa5e5a381b14203d296d35fcd",
+        "sealFormatVersion": 3,
+        "signingKeyId": "k-2026-09",
+        "createdAt": {
+          "$date": "2026-11-15T20:48:29.755Z"
+        },
+        "isImmutable": true,
+        "coreBookInstanceId": {
+          "$oid": "6afa1a9b153961cc0bfb361d"
+        },
+        "orderId": null,
+        "form4473Id": null,
+        "nicsCheckId": null,
+        "entryHash": "aae3fe2f2e140fc20cef0dfe66646b784ea77cda41b74d8e3eb3f4670577cd6f",
+        "entrySignature": "AtCZRC34ujJzyuQyT5Vv5BlvTicBtb0dczUJLV+J6W1yxxpKYNr0kNu7dANde1k/5sVmTD65c7QWOR5Okf64DA=="
+      }
+    ]
+  }
+}

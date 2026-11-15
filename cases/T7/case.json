@@ -1,0 +1,11 @@
+{
+  "id": "T7",
+  "kind": "export",
+  "title": "Tamper test: V2 with a dealer's job title widened to Firearm_Manufactured inside its sealed Authority version",
+  "laws": [
+    6,
+    8
+  ],
+  "export": "entity-export.json",
+  "expect": "FAIL"
+}

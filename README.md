@@ -34,7 +34,9 @@ T3      FAIL       FAIL     as expected
 T4      FAIL       FAIL     as expected
 T5      FAIL       FAIL     as expected
 T6      FAIL       FAIL     as expected
+T7      FAIL       FAIL     as expected
 V1      PASS       PASS     as expected
+V2      PASS       PASS     as expected
 
 ALL CASES AS EXPECTED
 ```
@@ -65,7 +67,9 @@ Compare them before you trust any PASS.
 | [T4](cases/T4) | V1 with one entry's `contextBundleHash` edited and every root recomputed -- a tamper test | 05, 06 | **FAIL** |
 | [T5](cases/T5) | A2 with the newest affirmation removed and every root recomputed -- the chain still looks whole; the sealed gate reads catch it | 02, 06 | **FAIL** |
 | [T6](cases/T6) | A3 with the withdrawal removed and every root recomputed -- a withdrawn judgment brought back | 06 | **FAIL** |
+| [T7](cases/T7) | V2 with the dealer's receiving-clerk title widened to record `Firearm_Manufactured` inside its sealed Authority version -- a tamper test | 06, 08 | **FAIL** |
 | [V1](cases/V1) | Entry format v5: v4 entries and v5 entries carrying sealed context anchors, in one licensee export | 05 Consequence Requires Provenance, 06 | PASS |
+| [V2](cases/V2) | Entry format v7 under the platform's own package (package #0): a licensed dealer onboarded, the job titles the kernel derived from its sealed licence (a dealer gets acquisition titles, never manufacture), named by the owner, and a clerk hired by job title | 05, 06, 08 Composition Cannot Manufacture Authority | PASS |
 
 M cases are refused by the kernel: the evidence is a signed proposal, a receipt and
 the chain. R cases are refused by the workflow before anything reaches the kernel, so

@@ -1,0 +1,14 @@
+{
+  "id": "V2",
+  "kind": "export",
+  "title": "Entry format v7 under package #0: a dealer's job titles derived by the kernel from its sealed licence, and a hire by job title",
+  "laws": [
+    5,
+    6,
+    8
+  ],
+  "subject": "entity 6afa1a9d2e98d85fe889ddf3 (Mesa Example Arms, synthetic FFL type 01)",
+  "exportedAt": "2026-11-15T20:48:30Z",
+  "export": "entity-export.json",
+  "expect": "PASS"
+}
