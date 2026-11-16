@@ -24,3 +24,18 @@ time of the refusal -- before any export.
 
 Case numbers M4 and M5 are reserved: M4 waits on a fix to entity-chain export, and M5
 (a refused first entry) has no chain to export.
+
+## Platform chain
+
+Invari's own chain (production, invari_v5): its genesis -- the declaration of the admission
+rules, the signing key and the first governor -- and each version of the platform's own
+package (package #0) admitted on it. A later export of the platform chain must contain
+these entries unchanged. Published 2026-11-16; rows are only ever added.
+
+| Chain | Version | Entry | entryHash | Committed (UTC) |
+|-------|---------|-------|-----------|-----------------|
+| `entity::6af9fe44012241e79c3718bf` | v1 | Platform genesis (Entity_Onboarded) | `c27818dee5fdb6707655851949b0f10dcfc7dc68c8c6a62bdecb25cd5394c553` | 2026-11-15 18:47:32 |
+| `entity::6af9fe44012241e79c3718bf` | v2 | package #0 1.0.0 admitted (platformHash `eb651845dde7...`) | `274e56e973c33396339f980d71c9d7ee89c25ffb982c8cd48c390a3701d0e123` | 2026-11-15 18:47:33 |
+| `entity::6af9fe44012241e79c3718bf` | v3 | package #0 1.1.0 admitted (platformHash `0a6a2031fb7b...`) | `0dd058a965862952e9d47a09661a1b68c88d7b7f7ebb0eefb97c2b419cea4858` | 2026-11-15 19:40:57 |
+| `entity::6af9fe44012241e79c3718bf` | v4 | package #0 1.2.0 admitted (platformHash `ca718be23bd2...`) | `41b51f214334679541861e410d51cb9808989d8e1f911b89f012bb5fc14269ab` | 2026-11-15 20:05:23 |
+| `entity::6af9fe44012241e79c3718bf` | v5 | package #0 1.3.0 admitted (platformHash `9b805e98c5f9...`) | `2d86b20a2d0d45bf6e719145ae4d19a17688d391abe3dfaeab3cc5a04fb21995` | 2026-11-16 21:11:39 |
