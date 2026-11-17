@@ -41,3 +41,4 @@ these entries unchanged. Published 2026-11-16; rows are only ever added.
 | `entity::6af9fe44012241e79c3718bf` | v5 | package #0 1.3.0 admitted (platformHash `9b805e98c5f9...`) | `2d86b20a2d0d45bf6e719145ae4d19a17688d391abe3dfaeab3cc5a04fb21995` | 2026-11-16 21:11:39 |
 | `entity::6af9fe44012241e79c3718bf` | v6 | package #0 1.4.0 admitted (platformHash `a991cabd5c4e...`) | `9b5b86a8080088f4c0ff447fa154816c66588162468a7f55ccf735a13c5e5df9` | 2026-11-16 21:52:21 |
 | `entity::6af9fe44012241e79c3718bf` | v7 | package #0 1.5.0 admitted (platformHash `29e4f5279684...`) | `514d3910518ce17b4de5eba2a60d187512b20376bc192a1e4dd3001a92460c79` | 2026-11-16 22:43:15 |
+| `entity::6af9fe44012241e79c3718bf` | v8 | package #0 1.6.0 admitted (platformHash `abce4f67b80b...`) | `e3e2416a5e43349d05526b1f73abea67d0710474b6f9c196b8ee6c88ef69075c` | 2026-11-17 02:50:38 |
