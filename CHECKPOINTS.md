@@ -39,3 +39,5 @@ these entries unchanged. Published 2026-11-16; rows are only ever added.
 | `entity::6af9fe44012241e79c3718bf` | v3 | package #0 1.1.0 admitted (platformHash `0a6a2031fb7b...`) | `0dd058a965862952e9d47a09661a1b68c88d7b7f7ebb0eefb97c2b419cea4858` | 2026-11-15 19:40:57 |
 | `entity::6af9fe44012241e79c3718bf` | v4 | package #0 1.2.0 admitted (platformHash `ca718be23bd2...`) | `41b51f214334679541861e410d51cb9808989d8e1f911b89f012bb5fc14269ab` | 2026-11-15 20:05:23 |
 | `entity::6af9fe44012241e79c3718bf` | v5 | package #0 1.3.0 admitted (platformHash `9b805e98c5f9...`) | `2d86b20a2d0d45bf6e719145ae4d19a17688d391abe3dfaeab3cc5a04fb21995` | 2026-11-16 21:11:39 |
+| `entity::6af9fe44012241e79c3718bf` | v6 | package #0 1.4.0 admitted (platformHash `a991cabd5c4e...`) | `9b5b86a8080088f4c0ff447fa154816c66588162468a7f55ccf735a13c5e5df9` | 2026-11-16 21:52:21 |
+| `entity::6af9fe44012241e79c3718bf` | v7 | package #0 1.5.0 admitted (platformHash `29e4f5279684...`) | `514d3910518ce17b4de5eba2a60d187512b20376bc192a1e4dd3001a92460c79` | 2026-11-16 22:43:15 |
