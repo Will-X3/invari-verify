@@ -47,3 +47,21 @@ these entries unchanged. Published 2026-11-16; rows are only ever added.
 | `entity::6af9fe44012241e79c3718bf` | v11 | package #0 1.9.0 admitted (platformHash `9c76ef71aaa7...`) | `1cb2ea64bce2cd68bbf48e88d62c04af7376bbfc6bc677a4cf01c305271464e4` | 2026-11-17 22:00:33 |
 | `entity::6af9fe44012241e79c3718bf` | v12 | package #0 1.10.0 admitted (platformHash `72068657c0a1...`) | `1b6f1ecb6ee4c2bf5f23c3410bd1759f02fd0b2ecfe08b218bd3f17d4d8c1349` | 2026-11-17 22:19:33 |
 | `entity::6af9fe44012241e79c3718bf` | v13 | package #0 1.11.0 admitted (platformHash `b47cb3c38f8c...`) | `97e1609e83c2f70d19c50626fd3eec1ca9fe48759e6c1a06586c2f7c1ab86af0` | 2026-11-17 22:57:45 |
+
+## .Glyph files
+
+The three descriptions the kernel judges by -- the shared ISA (the vocabulary of
+events, subjects and states), the frame ABI (the 160-byte frame layout) and the
+conditions grammar (the closed list of kinds a condition may take). Each is identified
+by the SHA-256 of its own canonical JSON and names the version before it, so each forms
+a chain. The files are in [glyph/](glyph/); `node verify-glyph.js` recomputes every hash
+and checks each chain against these rows. A failover kernel must hold exactly these
+versions before it can become authoritative. Published 2026-11-17; rows are only ever added.
+
+| File | Version | Hash | Previous | Published |
+|------|---------|------|----------|-----------|
+| `invari.shared-isa` | 1.0.0 | `cbc14faac275ec260ea199caaeb78f217ea94ce6868ce2e4b947c6729af614e8` | -- (first) | 2026-11-17 |
+| `invari.shared-isa` | 1.1.0 | `9298ff13e7d39d696732f48f2c86553cae1fb7a7f48425e99412367e1e6fe134` | 1.0.0 | 2026-11-17 |
+| `invari.frame-abi` | 2 | `040e57edc575d035cfccdcb184fc286c3b9d5d8dc62cb43986585f2057df7953` | 1 (never published as a file) | 2026-11-17 |
+| `invari.glyph-grammar` | 1.0.0 | `8cce1c232675187e64b8fbf9f7e18d63af77829b60f811e26217cbd89f24ec36` | -- (first) | 2026-11-17 |
+| `invari.glyph-grammar` | 1.1.0 | `4fd6cfa8edfe2e0305b869dc19c767e794ab95236824256ab1d44872444858ff` | 1.0.0 | 2026-11-17 |

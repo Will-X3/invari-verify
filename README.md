@@ -43,6 +43,17 @@ ALL CASES AS EXPECTED
 
 Run one case with its full output: `node verify-all.js M1`
 
+Check the published .Glyph files (the vocabulary, the frame layout and the conditions
+grammar the kernel judges by):
+
+```
+node verify-glyph.js
+```
+
+It recomputes the hash of every file in `glyph/`, checks that each file's versions form
+one unbroken chain, and compares every version with the row published in
+[CHECKPOINTS.md](CHECKPOINTS.md). It ends `RESULT: PASS` or names what failed.
+
 ## Don't trust this folder's key
 
 `public-keys.json` must match the key published at
@@ -126,6 +137,13 @@ A signed head that is an earlier version, or a timestamp outside that window, fa
 
 ## What it does NOT prove -- stated plainly
 
+- **The .Glyph conditions behind an accepted act are not re-run from here yet.** Since
+  17 November 2026 the kernel judges certain rules as .Glyph conditions, written in the
+  grammar in `glyph/` and carried by a certified bundle or by package #0. Their verdicts
+  are sealed inside the entry's `policyBundleHash`, but an export does not yet carry the
+  conditions or their trace. This folder checks the grammar they are written in, not
+  each judgment.
+
 - **The receipt's outcome is not yet signed.** "REJECTED" and the reason code are
   written when the receipt is finalized, outside the signature, so the verifier prints
   them marked `NOT SIGNED`. Checks 2-5 are what make a refusal credible: a signed
@@ -157,6 +175,8 @@ committed so you can see what a failure looks like.
 
 ```
 public-keys.json   Invari's published signing keys (compare with invari.systems)
+verify-glyph.js    checks glyph/ against the .Glyph rows in CHECKPOINTS.md
+glyph/             every published version of the shared ISA, frame ABI and grammar
 CHECKPOINTS.md     published chain heads, one per case, with dates
 verify-all.js      runs every case against its expected result
 kernel/            the verifier source -- canonicalize.js, seal.js, entryFormat.js,
