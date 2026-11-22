@@ -54,6 +54,7 @@ these entries unchanged. Published 2026-11-16; rows are only ever added.
 | `entity::6af9fe44012241e79c3718bf` | v18 | package #0 1.16.0 admitted (platformHash `fdc3fa0806e3...`) | `53c11c02c4b78388132ef1e974cf0905e7c3afbc70e5cb124cf5f901d0d1ae3e` | 2026-11-22 01:06:35 |
 | `entity::6af9fe44012241e79c3718bf` | v19 | package #0 1.17.0 admitted (platformHash `43b95e085d3e...`) | `9781ab595ac8902f5bda4d6ce7973c8264ed720c9db2963dcbe5d5222f1bd444` | 2026-11-22 01:21:05 |
 | `entity::6af9fe44012241e79c3718bf` | v20 | package #0 1.18.0 admitted (platformHash `509a8924d109...`) | `c1daac59e1be7bf04d598d5476d74d2dbf0419513d9f693ae8d626c194050998` | 2026-11-22 03:53:35 |
+| `entity::6af9fe44012241e79c3718bf` | v21 | package #0 1.19.0 admitted (platformHash `3500ec4b23f3...`) | `dc1828cd6f9c51b4b28d28a4ffeeb85b2d645beaf54de7af998683a313ee5acb` | 2026-11-22 04:34:02 |
 
 ## .Glyph files
 
