@@ -51,6 +51,8 @@ these entries unchanged. Published 2026-11-16; rows are only ever added.
 | `entity::6af9fe44012241e79c3718bf` | v15 | package #0 1.13.0 admitted (platformHash `b21be1d1a16d...`) | `cc72b06ae5bf4c869328373eb67c1a984f475e7130d729016a3bff9adc7279a8` | 2026-11-21 23:03:51 |
 | `entity::6af9fe44012241e79c3718bf` | v16 | package #0 1.14.0 admitted (platformHash `dcdc82c02248...`) | `8215fbff5b35dc03dac2f6d9a9076b716a9f887c2ec18f988f12619608799fa0` | 2026-11-21 23:57:46 |
 | `entity::6af9fe44012241e79c3718bf` | v17 | package #0 1.15.0 admitted (platformHash `4f4dd3eb9de2...`) | `f20d4198a9f20e6cc83cf8af4c43adbf1ed8544cb52c3af161e239332269f2ef` | 2026-11-22 00:33:58 |
+| `entity::6af9fe44012241e79c3718bf` | v18 | package #0 1.16.0 admitted (platformHash `fdc3fa0806e3...`) | `53c11c02c4b78388132ef1e974cf0905e7c3afbc70e5cb124cf5f901d0d1ae3e` | 2026-11-22 01:06:35 |
+| `entity::6af9fe44012241e79c3718bf` | v19 | package #0 1.17.0 admitted (platformHash `43b95e085d3e...`) | `9781ab595ac8902f5bda4d6ce7973c8264ed720c9db2963dcbe5d5222f1bd444` | 2026-11-22 01:21:05 |
 
 ## .Glyph files
 
@@ -71,3 +73,5 @@ versions before it can become authoritative. Published 2026-11-17; rows are only
 | `invari.glyph-grammar` | 1.1.0 | `4fd6cfa8edfe2e0305b869dc19c767e794ab95236824256ab1d44872444858ff` | 1.0.0 | 2026-11-17 |
 | `invari.glyph-grammar` | 1.2.0 | `3446cb9bba7962ad40b12bf2707cd3509adc70492dc15391630e2372fec36e5a` | 1.1.0 | 2026-11-21 |
 | `invari.glyph-grammar` | 1.3.0 | `7a290b0f0236d58aaa916cf3787eb82c38b7c0dda53a60503779a1da6c73c2cd` | 1.2.0 | 2026-11-21 |
+| `invari.glyph-grammar` | 1.4.0 | `02edcd1039d1cc29312b2ee11316b7f28f759852cd9b5ff68615ff3ab84e319a` | 1.3.0 | 2026-11-21 |
+| `invari.glyph-grammar` | 1.5.0 | `599996ba086f6e9771ddc73eafb1db4df265e89d4821ca55591cfdcc51827ae9` | 1.4.0 | 2026-11-21 |
