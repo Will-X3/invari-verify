@@ -106,6 +106,9 @@ every signed affirmation, and that each affirmation the entry cites is an AFFIRM
    has both null. Like the anchors, it is inside the entry hash. Whether that version
    was in fact the one in force at the entry's time is checked by the platform's
    `verifyChains` against the platform chain, not by this folder.
+   Times never go backwards: no entry's `eventTimestamp` is earlier than the entry
+   before it on its chain (the kernel refuses such a commit from 22 November 2026;
+   every export is held to the same rule, whatever its date).
 2. **The receipt.** Its `inputCommitHash` recomputes from `{tenantId, proposal}` and
    its signature verifies: Invari's kernel issued a receipt for exactly this proposal.
 3. The proposal was for this asset, formed against the stated version, by the tenant
@@ -143,6 +146,13 @@ A signed head that is an earlier version, or a timestamp outside that window, fa
   are sealed inside the entry's `policyBundleHash`, but an export does not yet carry the
   conditions or their trace. This folder checks the grammar they are written in, not
   each judgment.
+
+- **Who was allowed to act is not replayed from here.** Each entry seals the decision
+  the kernel made about its actor (`authorityRef`: the Authority version, the binding,
+  the power, and since 23 November 2026 for corrections the `upward` ranks -- a
+  correction comes only from above the person who made the entry). This folder checks
+  that decision is sealed, inside the entry hash; replaying it against the business's
+  Authority versions and the platform rules is done by the platform's `verifyChains`.
 
 - **The receipt's outcome is not yet signed.** "REJECTED" and the reason code are
   written when the receipt is finalized, outside the signature, so the verifier prints

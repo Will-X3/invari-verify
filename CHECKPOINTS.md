@@ -55,6 +55,11 @@ these entries unchanged. Published 2026-11-16; rows are only ever added.
 | `entity::6af9fe44012241e79c3718bf` | v19 | package #0 1.17.0 admitted (platformHash `43b95e085d3e...`) | `9781ab595ac8902f5bda4d6ce7973c8264ed720c9db2963dcbe5d5222f1bd444` | 2026-11-22 01:21:05 |
 | `entity::6af9fe44012241e79c3718bf` | v20 | package #0 1.18.0 admitted (platformHash `509a8924d109...`) | `c1daac59e1be7bf04d598d5476d74d2dbf0419513d9f693ae8d626c194050998` | 2026-11-22 03:53:35 |
 | `entity::6af9fe44012241e79c3718bf` | v21 | package #0 1.19.0 admitted (platformHash `3500ec4b23f3...`) | `dc1828cd6f9c51b4b28d28a4ffeeb85b2d645beaf54de7af998683a313ee5acb` | 2026-11-22 04:34:02 |
+| `entity::6af9fe44012241e79c3718bf` | v22 | package #0 1.20.0 admitted | `4b5b44ad5f46480fe2bc1cd00474c460b5a20ec009c1d8d995440d1dd815fab1` | 2026-11-22 22:31:25 |
+| `entity::6af9fe44012241e79c3718bf` | v23 | package #0 1.21.0 admitted (platformHash `52cc7adb...`) | `bc46e5145cdd7cc8a074d23177234d06d1f0188d59c7bd3a03b89239ddb925b3` | 2026-11-23 21:41:52 |
+| `entity::6af9fe44012241e79c3718bf` | v24 | package #0 1.22.0 admitted (platformHash `3d416e27dc61...`) | `f1285e7e2376bed3538cd1321bab3d801315d9cd442f50a37db54592d65d7659` | 2026-11-23 22:00:32 |
+| `entity::6af9fe44012241e79c3718bf` | v25 | package #0 1.23.0 admitted (platformHash `27f7ff3463bf...`) | `0afda8eeb9175cedd9ada7b275f820fe86184c0e8a00adc979f6f08d7c10a966` | 2026-11-23 22:34:32 |
+| `entity::6af9fe44012241e79c3718bf` | v26 | package #0 1.24.0 admitted (platformHash `6a030ec8a998...`) | `400315d226a3c159cdff86b1e8099bae90ca35c76a515b19f26343f038712fec` | 2026-11-24 02:15:21 |
 
 ## .Glyph files
 
@@ -78,3 +83,6 @@ versions before it can become authoritative. Published 2026-11-17; rows are only
 | `invari.glyph-grammar` | 1.4.0 | `02edcd1039d1cc29312b2ee11316b7f28f759852cd9b5ff68615ff3ab84e319a` | 1.3.0 | 2026-11-21 |
 | `invari.glyph-grammar` | 1.5.0 | `599996ba086f6e9771ddc73eafb1db4df265e89d4821ca55591cfdcc51827ae9` | 1.4.0 | 2026-11-21 |
 | `invari.glyph-grammar` | 1.6.0 | `d699b29b3609c70a207fe0e58300e522befebce1e7465339ffa0e31bd07cb979` | 1.5.0 | 2026-11-21 |
+| `invari.glyph-grammar` | 1.7.0 | `cd80cd38f713bd7e3876e4ce51b4b2a37a83d813df53fb89737929adf62c92bb` | 1.6.0 | 2026-11-23 |
+| `invari.glyph-grammar` | 1.8.0 | `3b464ee76aec29c5c8307de9da8865b8cea119ea539850b6e3da78c3a2ef673a` | 1.7.0 | 2026-11-23 |
+| `invari.glyph-grammar` | 1.9.0 | `30be16966fdf39b42a26b554edd42ace9a3aa775474778aab56ada09e7523db8` | 1.8.0 | 2026-11-23 |

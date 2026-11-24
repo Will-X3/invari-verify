@@ -30,8 +30,9 @@
  *   2. each entry: entryHash recomputes from its own content, and its
  *      Ed25519 signature verifies under signingKeyId (once per entry,
  *      even if it appears in several sections)
- *   3. each chain (entries grouped by assetId): versions contiguous and
- *      every previousEntryHash links. A chain that starts after v1 --
+ *   3. each chain (entries grouped by assetId): versions contiguous,
+ *      every previousEntryHash links, and (R-209) no entry's eventTimestamp
+ *      is earlier than the one before it. A chain that starts after v1 --
  *      e.g. the export's own audit record on the platform ledger -- is
  *      reported as a partial chain, not an error: its first link points
  *      outside the export
@@ -293,6 +294,16 @@ function verifyExport(artifact, publicKeys) {
         problems.push(
           `${assetId} v${e.version}: previousEntryHash does not link to v${e.version - 1}`,
         );
+      }
+      // R-209 (2026-11-22): a chain's times never go backwards -- the kernel
+      // refuses it at commit; an export is held to the same rule.
+      if (i > 0) {
+        const at = Date.parse(e.eventTimestamp?.$date ?? e.eventTimestamp);
+        const before = Date.parse(es[i - 1].eventTimestamp?.$date ?? es[i - 1].eventTimestamp);
+        if (Number.isNaN(at) || (!Number.isNaN(before) && at < before))
+          problems.push(
+            `${assetId} v${e.version}: eventTimestamp is earlier than v${es[i - 1].version}'s (a chain's times never go backwards)`,
+          );
       }
     });
     const partial = first > 1;
