@@ -61,6 +61,10 @@ these entries unchanged. Published 2026-11-16; rows are only ever added.
 | `entity::6af9fe44012241e79c3718bf` | v25 | package #0 1.23.0 admitted (platformHash `27f7ff3463bf...`) | `0afda8eeb9175cedd9ada7b275f820fe86184c0e8a00adc979f6f08d7c10a966` | 2026-11-23 22:34:32 |
 | `entity::6af9fe44012241e79c3718bf` | v26 | package #0 1.24.0 admitted (platformHash `6a030ec8a998...`) | `400315d226a3c159cdff86b1e8099bae90ca35c76a515b19f26343f038712fec` | 2026-11-24 02:15:21 |
 | `entity::6af9fe44012241e79c3718bf` | v27 | package #0 1.25.0 admitted (platformHash `6d2869756b5f...`) | `03810931512182b78ff28385d946298ad3d9b28783d2207230830339a09858d0` | 2026-11-24 21:57:48 |
+| `entity::6af9fe44012241e79c3718bf` | v28 | package #0 1.26.0 admitted (platformHash `5c9f2a2adb64...`) | `1f4c382b731d5fdb417f1a4d44b80fbad4e65738b8136bd0c46e501435f78a35` | 2026-11-25 03:25:09 |
+| `entity::6af9fe44012241e79c3718bf` | v29 | package #0 1.27.0 admitted (platformHash `eb17d171dcb1...`) | `f7b0849e621553ec8306cf21426a08a9f6f5fade12ee09846af1004851526854` | 2026-11-27 19:26:58 |
+| `entity::6af9fe44012241e79c3718bf` | v30 | package #0 1.28.0 admitted (platformHash `b856c99be802...`) | `0ff6dc268c1b9bc7f1c7bc2bba0e6d23b99c6ecbbe98b5e75efe98d135716c79` | 2026-11-27 20:21:21 |
+| `entity::6af9fe44012241e79c3718bf` | v31 | package #0 1.29.0 admitted (platformHash `7089628e2fb5...`) | `18fc775dfac8eaacca8d010097d7fa9fa6503128faabecf83d5544f1d7fc987f` | 2026-11-27 22:25:14 |
 
 ## .Glyph files
 
